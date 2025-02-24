@@ -1,8 +1,11 @@
+import ActiveOrders from '@/components/orders/ActiveOrders.tsx'
 import React from 'react'
 
 const Orders = () => {
   return (
-    <div>Orders</div>
+    <div>
+      <ActiveOrders></ActiveOrders>
+    </div>
   )
 }
 
