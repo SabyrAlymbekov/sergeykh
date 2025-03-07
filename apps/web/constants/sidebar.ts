@@ -1,28 +1,29 @@
-import { Home, ClipboardList, ClipboardCheck, PhoneCall, ChartColumn, UserRound, CalendarCheck, Settings, ChartNoAxesCombined } from 'lucide-react';
+import { Home, ClipboardList, CalendarDays, ChartColumn, UserRound, CalendarCheck, Settings, ChartNoAxesCombined } from 'lucide-react';
 
 export const sidebar_items = [
     {
+      name: "Основные",
+      list: [
+        {
+          title: "Главная",
+          url: "/",
+          icon: Home,
+        }
+      ]
+    },
+    {
         name: "Инструменты",
         list: [
-            {
-                title: "Главная",
-                url: "/",
-                icon: Home,
-            },
-            {
-                title: "Мои заказы",
+
+          {
+                title: "Доступные заказы",
                 url: "/orders",
                 icon: ClipboardList,
             },
             {
-                title: "Доступные заказы",
-                url: "/free-orders",
-                icon: ClipboardCheck,
-            },
-            {
-                title: "История звонков",
-                url: "/calls",
-                icon: PhoneCall,
+                title: "Календарь загруженности",
+                url: "/calendar",
+                icon: CalendarDays,
             },
             {
                 title: "Финансы",

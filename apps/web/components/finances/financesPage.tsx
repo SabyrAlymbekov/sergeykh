@@ -11,7 +11,7 @@ const FinancesPage = () => {
   return (
     <div className="w-full container">
       <div className="">
-        <div className="flex items-center flex-col justify-center gap-5">
+        <div className="flex items-center flex-col justify-center gap-14">
           <div className="flex items-center justify-center flex-col">
 
             <h1 className="text-2xl text-gray-400">

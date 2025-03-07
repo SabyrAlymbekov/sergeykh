@@ -35,7 +35,7 @@ export function HistoryPayments() {
   const [currentPage, setCurrentPage] = useState(1);
   const totalPages = Math.ceil(invoices.length / ITEMS_PER_PAGE);
 
-  const handlePageChange = (page) => {
+  const handlePageChange = (page : number) => {
     if (page >= 1 && page <= totalPages) {
       setCurrentPage(page);
     }
