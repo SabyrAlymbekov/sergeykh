@@ -40,14 +40,14 @@ function Calendar() {
       work: {
         colorName: 'work',
         lightColors: {
-          main: '#f91c45',
-          container: '#ffd2dc',
-          onContainer: '#59000d',
+          main: '#00b0ff',  // Changed color
+          container: '#b3e5fc',  // Changed color
+          onContainer: '#01579b',  // Changed color
         },
         darkColors: {
-          main: '#ffc0cc',
-          onContainer: '#ffdee6',
-          container: '#a24258',
+          main: '#82b3c9',  // Changed color
+          onContainer: '#b3e5fc',  // Changed color
+          container: '#01579b',  // Changed color
         },
       },
       leisure: {

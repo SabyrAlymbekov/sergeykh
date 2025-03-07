@@ -101,17 +101,16 @@ ${colorConfig
 }
 
 const ChartTooltip = RechartsPrimitive.Tooltip
-
 const ChartTooltipContent = React.forwardRef<
   HTMLDivElement,
   React.ComponentProps<typeof RechartsPrimitive.Tooltip> &
-    React.ComponentProps<"div"> & {
-      hideLabel?: boolean
-      hideIndicator?: boolean
-      indicator?: "line" | "dot" | "dashed"
-      nameKey?: string
-      labelKey?: string
-    }
+  React.ComponentProps<"div"> & {
+  hideLabel?: boolean
+  hideIndicator?: boolean
+  indicator?: "line" | "dot" | "dashed"
+  nameKey?: string
+  labelKey?: string
+}
 >(
   (
     {
@@ -139,6 +138,8 @@ const ChartTooltipContent = React.forwardRef<
       }
 
       const [item] = payload
+      if (!item) return null // Добавлена проверка на существование item
+
       const key = `${labelKey || item.dataKey || item.name || "value"}`
       const itemConfig = getPayloadConfigFromPayload(config, item, key)
       const value =
@@ -154,11 +155,9 @@ const ChartTooltipContent = React.forwardRef<
         )
       }
 
-      if (!value) {
-        return null
-      }
-
-      return <div className={cn("font-medium", labelClassName)}>{value}</div>
+      return value ? (
+        <div className={cn("font-medium", labelClassName)}>{value}</div>
+      ) : null
     }, [
       label,
       labelFormatter,
@@ -186,13 +185,15 @@ const ChartTooltipContent = React.forwardRef<
         {!nestLabel ? tooltipLabel : null}
         <div className="grid gap-1.5">
           {payload.map((item, index) => {
+            if (!item) return null // Добавлена проверка для каждого элемента
+
             const key = `${nameKey || item.name || item.dataKey || "value"}`
             const itemConfig = getPayloadConfigFromPayload(config, item, key)
-            const indicatorColor = color || item.payload.fill || item.color
+            const indicatorColor = color || item.payload?.fill || item.color
 
             return (
               <div
-                key={item.dataKey}
+                key={item.dataKey || index}
                 className={cn(
                   "flex w-full flex-wrap items-stretch gap-2 [&>svg]:h-2.5 [&>svg]:w-2.5 [&>svg]:text-muted-foreground",
                   indicator === "dot" && "items-center"
@@ -322,7 +323,7 @@ function getPayloadConfigFromPayload(
   payload: unknown,
   key: string
 ) {
-  if (typeof payload !== "object" || payload === null) {
+  if (!payload || typeof payload !== "object") {
     return undefined
   }
 
@@ -335,26 +336,20 @@ function getPayloadConfigFromPayload(
 
   let configLabelKey: string = key
 
-  if (
-    key in payload &&
-    typeof payload[key as keyof typeof payload] === "string"
-  ) {
-    configLabelKey = payload[key as keyof typeof payload] as string
+  const payloadAny = payload as Record<string, unknown>
+
+  if (key in payloadAny && typeof payloadAny[key] === "string") {
+    configLabelKey = payloadAny[key] as string
   } else if (
     payloadPayload &&
     key in payloadPayload &&
     typeof payloadPayload[key as keyof typeof payloadPayload] === "string"
   ) {
-    configLabelKey = payloadPayload[
-      key as keyof typeof payloadPayload
-    ] as string
+    configLabelKey = payloadPayload[key as keyof typeof payloadPayload] as string
   }
 
-  return configLabelKey in config
-    ? config[configLabelKey]
-    : config[key as keyof typeof config]
+  return config[configLabelKey as keyof typeof config] || config[key as keyof typeof config]
 }
-
 export {
   ChartContainer,
   ChartTooltip,

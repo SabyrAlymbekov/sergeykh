@@ -1,5 +1,5 @@
-import ActiveOrders from '@/components/orders/ActiveOrders.tsx'
 import React from 'react'
+import ActiveOrders from "@/components/orders/ActiveOrders";
 
 const Orders = () => {
   return (
