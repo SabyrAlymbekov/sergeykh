@@ -4,7 +4,7 @@ import {Component} from "@/components/finances/chart/myChart";
 import {HistoryPayments} from "@/components/finances/chartFinances/historyPayments";
 
 const FinancesPage = () => {
-  const [isVisible, setIsVisible] = useState(true);
+  const [isVisible] = useState(true);
   const balance = 1000;
   const currency = '₽';
 

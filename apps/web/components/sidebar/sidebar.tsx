@@ -5,7 +5,6 @@ import {
 } from "@workspace/ui/components/sidebar"
 import SidebarItems from "./sidebar-items"
 import SidebarUser from "./sidebar-user"
-import Image from "next/image"
 import { GalleryVerticalEnd } from "lucide-react"
    
 const AppSidebar = () => {
@@ -14,7 +13,6 @@ const AppSidebar = () => {
         <SidebarHeader>
           <div className="flex items-center gap-2 p-4 flex-row">
           <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
-                {/* <Image src={GalleryVerticalEnd} alt="logo" /> */}
                 <GalleryVerticalEnd className="size-4"></GalleryVerticalEnd>
           </div>
               <div className="grid flex-1 text-left text-sm leading-tight">
