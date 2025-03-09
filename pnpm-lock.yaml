@@ -26,51 +26,18 @@ importers:
 
   apps/web:
     dependencies:
-      '@schedule-x/calendar':
-        specifier: ^2.21.1
-        version: 2.21.1(@preact/signals@1.3.2(preact@10.26.4))(preact@10.26.4)
-      '@schedule-x/drag-and-drop':
-        specifier: ^2.21.1
-        version: 2.21.1
-      '@schedule-x/events-service':
-        specifier: ^2.21.1
-        version: 2.21.1
-      '@schedule-x/react':
-        specifier: ^2.21.2
-        version: 2.21.2(@schedule-x/calendar@2.21.1(@preact/signals@1.3.2(preact@10.26.4))(preact@10.26.4))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
-      '@schedule-x/theme-default':
-        specifier: ^2.21.1
-        version: 2.21.1
-      '@syncfusion/ej2-base':
-        specifier: ^28.2.9
-        version: 28.2.9
-      '@syncfusion/ej2-data':
-        specifier: ^28.2.3
-        version: 28.2.3
-      '@syncfusion/ej2-inputs':
-        specifier: ^28.2.9
-        version: 28.2.9
-      '@syncfusion/ej2-react-buttons':
-        specifier: ^28.2.7
-        version: 28.2.7
-      '@syncfusion/ej2-react-calendars':
-        specifier: ^28.2.9
-        version: 28.2.9
-      '@syncfusion/ej2-react-dropdowns':
-        specifier: ^28.2.9
-        version: 28.2.9
-      '@syncfusion/ej2-react-inputs':
-        specifier: ^28.2.9
-        version: 28.2.9
-      '@syncfusion/ej2-react-navigations':
-        specifier: ^28.2.6
-        version: 28.2.6
-      '@syncfusion/ej2-react-schedule':
-        specifier: ^28.2.7
-        version: 28.2.7
-      '@syncfusion/ej2-react-splitbuttons':
-        specifier: ^28.2.3
-        version: 28.2.3
+      '@fullcalendar/daygrid':
+        specifier: ^6.1.15
+        version: 6.1.15(@fullcalendar/core@6.1.15)
+      '@fullcalendar/interaction':
+        specifier: ^6.1.15
+        version: 6.1.15(@fullcalendar/core@6.1.15)
+      '@fullcalendar/react':
+        specifier: ^6.1.15
+        version: 6.1.15(@fullcalendar/core@6.1.15)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@fullcalendar/timegrid':
+        specifier: ^6.1.15
+        version: 6.1.15(@fullcalendar/core@6.1.15)
       '@tailwindcss/postcss':
         specifier: ^4.0.9
         version: 4.0.9
@@ -80,6 +47,9 @@ importers:
       '@workspace/ui':
         specifier: workspace:*
         version: link:../../packages/ui
+      fullcalendar:
+        specifier: ^6.1.15
+        version: 6.1.15
       index:
         specifier: link:@schedule-x/react/dist/index
         version: link:@schedule-x/react/dist/index
@@ -191,6 +161,9 @@ importers:
       '@radix-ui/react-label':
         specifier: ^2.1.2
         version: 2.1.2(@types/react-dom@18.3.1)(@types/react@18.3.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@radix-ui/react-select':
+        specifier: ^2.1.6
+        version: 2.1.6(@types/react-dom@18.3.1)(@types/react@18.3.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@radix-ui/react-separator':
         specifier: ^1.1.2
         version: 1.1.2(@types/react-dom@18.3.1)(@types/react@18.3.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -334,6 +307,41 @@ packages:
 
   '@floating-ui/utils@0.2.9':
     resolution: {integrity: sha512-MDWhGtE+eHw5JW7lq4qhc5yRLS11ERl1c7Z6Xd0a58DozHES6EnNNwUWbMiG4J9Cgj053Bhk8zvlhFYKVhULwg==}
+
+  '@fullcalendar/core@6.1.15':
+    resolution: {integrity: sha512-BuX7o6ALpLb84cMw1FCB9/cSgF4JbVO894cjJZ6kP74jzbUZNjtwffwRdA+Id8rrLjT30d/7TrkW90k4zbXB5Q==}
+
+  '@fullcalendar/daygrid@6.1.15':
+    resolution: {integrity: sha512-j8tL0HhfiVsdtOCLfzK2J0RtSkiad3BYYemwQKq512cx6btz6ZZ2RNc/hVnIxluuWFyvx5sXZwoeTJsFSFTEFA==}
+    peerDependencies:
+      '@fullcalendar/core': ~6.1.15
+
+  '@fullcalendar/interaction@6.1.15':
+    resolution: {integrity: sha512-DOTSkofizM7QItjgu7W68TvKKvN9PSEEvDJceyMbQDvlXHa7pm/WAVtAc6xSDZ9xmB1QramYoWGLHkCYbTW1rQ==}
+    peerDependencies:
+      '@fullcalendar/core': ~6.1.15
+
+  '@fullcalendar/list@6.1.15':
+    resolution: {integrity: sha512-U1bce04tYDwkFnuVImJSy2XalYIIQr6YusOWRPM/5ivHcJh67Gm8CIMSWpi3KdRSNKFkqBxLPkfZGBMaOcJYug==}
+    peerDependencies:
+      '@fullcalendar/core': ~6.1.15
+
+  '@fullcalendar/multimonth@6.1.15':
+    resolution: {integrity: sha512-sEZY6jbOYkeF9TwhUldG+UUVv+hiPlGkS8zZEgPR7ypcjhipyA03c5rPjx7N6huOHqh6lCMH59zlohLooQRlaw==}
+    peerDependencies:
+      '@fullcalendar/core': ~6.1.15
+
+  '@fullcalendar/react@6.1.15':
+    resolution: {integrity: sha512-L0b9hybS2J4e7lq6G2CD4nqriyLEqOH1tE8iI6JQjAMTVh5JicOo5Mqw+fhU5bJ7hLfMw2K3fksxX3Ul1ssw5w==}
+    peerDependencies:
+      '@fullcalendar/core': ~6.1.15
+      react: ^16.7.0 || ^17 || ^18 || ^19
+      react-dom: ^16.7.0 || ^17 || ^18 || ^19
+
+  '@fullcalendar/timegrid@6.1.15':
+    resolution: {integrity: sha512-61ORr3A148RtxQ2FNG7JKvacyA/TEVZ7z6I+3E9Oeu3dqTf6M928bFcpehRTIK6zIA6Yifs7BeWHgOE9dFnpbw==}
+    peerDependencies:
+      '@fullcalendar/core': ~6.1.15
 
   '@humanfs/core@0.19.1':
     resolution: {integrity: sha512-5DyQ4+1JEUzejeK1JGICcideyfUbGixgS9jNgex5nqkW+cY7WZhxBigmieN5Qnw9ZosSNVC9KQKyb+GUaGyKUA==}
@@ -555,13 +563,8 @@ packages:
     resolution: {integrity: sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==}
     engines: {node: '>=14'}
 
-  '@preact/signals-core@1.8.0':
-    resolution: {integrity: sha512-OBvUsRZqNmjzCZXWLxkZfhcgT+Fk8DDcT/8vD6a1xhDemodyy87UJRJfASMuSD8FaAIeGgGm85ydXhm7lr4fyA==}
-
-  '@preact/signals@1.3.2':
-    resolution: {integrity: sha512-naxcJgUJ6BTOROJ7C3QML7KvwKwCXQJYTc5L/b0eEsdYgPB6SxwoQ1vDGcS0Q7GVjAenVq/tXrybVdFShHYZWg==}
-    peerDependencies:
-      preact: 10.x
+  '@radix-ui/number@1.1.0':
+    resolution: {integrity: sha512-V3gRzhVNU1ldS5XhAPTom1fOIo4ccrjjJgmE+LI2h/WaFpHmx0MQApT+KZHnx8abG6Avtfcz4WoEciMnpFT3HQ==}
 
   '@radix-ui/primitive@1.1.1':
     resolution: {integrity: sha512-SJ31y+Q/zAyShtXJc8x83i9TYdbAfHZ++tUZnvjJJqFjzsdUnKsxPL6IEtBlxKkU7yzer//GQtZSV4GbldL3YA==}
@@ -806,6 +809,19 @@ packages:
       '@types/react-dom':
         optional: true
 
+  '@radix-ui/react-select@2.1.6':
+    resolution: {integrity: sha512-T6ajELxRvTuAMWH0YmRJ1qez+x4/7Nq7QIx7zJ0VK3qaEWdnWpNbEDnmWldG1zBDwqrLy5aLMUWcoGirVj5kMg==}
+    peerDependencies:
+      '@types/react': '*'
+      '@types/react-dom': '*'
+      react: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+      react-dom: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      '@types/react-dom':
+        optional: true
+
   '@radix-ui/react-separator@1.1.2':
     resolution: {integrity: sha512-oZfHcaAp2Y6KFBX6I5P1u7CQoy4lheCGiYj+pGFrHy8E/VNRb5E39TkTr3JrV520csPBTZjkuKFdEsjS5EUNKQ==}
     peerDependencies:
@@ -929,106 +945,11 @@ packages:
   '@radix-ui/rect@1.1.0':
     resolution: {integrity: sha512-A9+lCBZoaMJlVKcRBz2YByCG+Cp2t6nAnMnNba+XiWxnj6r4JUFqfsgwocMBZU9LPtdxC6wB56ySYpc7LQIoJg==}
 
-  '@schedule-x/calendar@2.21.1':
-    resolution: {integrity: sha512-vT+y8qTLRQH7n18EEKqYPq6AKUvzRIkGR7BDnwQCY27H22DEK3BiRF9Fsx0j99zB3A2BU+TwBo1YtJrkI/2kUQ==}
-    peerDependencies:
-      '@preact/signals': ^1.1.5
-      preact: ^10.19.2
-
-  '@schedule-x/drag-and-drop@2.21.1':
-    resolution: {integrity: sha512-trE+8lEX0eGoKb3cQN1c3DZBmYo/srveT+yzRMGdq40N0fcCZAMllnMVsoiCg8r+75Nx/ovh6UG5ajgvgW1vZQ==}
-
-  '@schedule-x/events-service@2.21.1':
-    resolution: {integrity: sha512-llk9znPNTxx2wGJeZq4mf3qWyZcyX3ab+pa85NydNRd7lfr6ZVSIJaqHZfbBctrmgF3Jjh3zwRHHig5Uf/RI/Q==}
-
-  '@schedule-x/react@2.21.2':
-    resolution: {integrity: sha512-l6j9pT4Jkl0mUrX0suDIm96E7UHAGeXhVoj3tQThe4SfAIMXTC+MqstLoKHFUPGBKzFRQjVoxXH4Qiw//2WZRw==}
-    peerDependencies:
-      '@schedule-x/calendar': ^2.18.0
-      react: ^16.7.0 || ^17 || ^18 || ^19
-      react-dom: ^16.7.0 || ^17 || ^18 || ^19
-
-  '@schedule-x/theme-default@2.21.1':
-    resolution: {integrity: sha512-8ZL7DwQD9tey829m3sIBxBdmowNR8PSCRjGodIQSSVCKFPvsQ4YoRozQYbrup4kz3OJIUtR0nUHIxr/dhXtHbQ==}
-
   '@swc/counter@0.1.3':
     resolution: {integrity: sha512-e2BR4lsJkkRlKZ/qCHPw9ZaSxc0MVUd7gtbtaB7aMvHeJVYe8sOB8DBZkP2DtISHGSku9sCK6T6cnY0CtXrOCQ==}
 
   '@swc/helpers@0.5.15':
     resolution: {integrity: sha512-JQ5TuMi45Owi4/BIMAJBoSQoOJu12oOk/gADqlcUL9JEdHB8vyjUSsxqeNXnmXHjYKMi2WcYtezGEEhqUI/E2g==}
-
-  '@syncfusion/ej2-base@28.2.9':
-    resolution: {integrity: sha512-5SuvKgBpLT0MdYpUIztXpQqcMQvpIBnZXTf2IElj6XSnHZYv0zfnYvlY7R/tClEQYUQAvTUCSIGNf42jPo5C+A==}
-    hasBin: true
-
-  '@syncfusion/ej2-buttons@28.2.7':
-    resolution: {integrity: sha512-pHWwqvxmc97tNXPaMJpu5iUyZr0RUiIPwbqX9J97lfrt4KqUm6Zzoj9hvMR+ai+gE7cV1KstWrwjUY1H3zYunw==}
-
-  '@syncfusion/ej2-calendars@28.2.9':
-    resolution: {integrity: sha512-KTIsdj5F5/paolNwZ9R3mCAKWlwSuAt8myu0yiig5WHLwUtHtOC66rtdBCjv/SkVdcd6C1G9Grd6tR9j0yMqhw==}
-
-  '@syncfusion/ej2-compression@28.2.3':
-    resolution: {integrity: sha512-OG+qWn2fNT4CtLpBWAif5gvZsrnpPrgEcxNQlT6uQX6ntDHT5IUDHSdvpUypGmJM3cDdcaqK8qygcgWBbj9ceQ==}
-
-  '@syncfusion/ej2-data@28.2.3':
-    resolution: {integrity: sha512-qAZQRqtOp/LhKLznMflaXUefrrinNpqBQkIE49XiUK0WzTZB8bXXtPMI5qPjTfqNkbqM4DelNMEqvqSkAi1BKA==}
-
-  '@syncfusion/ej2-dropdowns@28.2.9':
-    resolution: {integrity: sha512-vqXzILdsuW4MuzsHrtDzCL+TRhKtp5P5PFKuY8gg+aLCzWDRQP1b4sS8g9ILigo7k0Sw5XKl4y9ujDS0zR4Bzw==}
-
-  '@syncfusion/ej2-excel-export@28.2.3':
-    resolution: {integrity: sha512-DgL6Jg7uKFJKB83EDU0WLMTYpJDCGXsgbJ59ODSHOW+go+3gCBK/A+NJ7eZdacVQ0kAUNhuXRaIyjTemDqK6WA==}
-
-  '@syncfusion/ej2-file-utils@28.2.3':
-    resolution: {integrity: sha512-5PDcBtUfKy+P9BPVIYisT8DdZ7hNXkF5UWeOgw8rzE9BshBdpIcxRdEyMkRgQfqIHf3E7AWqLxyT87XxUOti2A==}
-
-  '@syncfusion/ej2-icons@28.2.3':
-    resolution: {integrity: sha512-lwDMbygU3y15jLkTCtvFb7dwfEtOVknjajYWnp+wmCJF14ZUwDEBuY1jCcpDcEd6mHkDdS5GFlpifdjZhh9jJA==}
-
-  '@syncfusion/ej2-inputs@28.2.9':
-    resolution: {integrity: sha512-Y394wSPTvshwH1xQ+bjBR1YHdW2JW/KDJleTeFxz/pHRId+KXNWS37cFUqIMQ99BVvWT1Yy1vjXBj0Os5tX83Q==}
-
-  '@syncfusion/ej2-lists@28.2.3':
-    resolution: {integrity: sha512-MB9ecuC0A3T6jwY6xIuHu5ZOtFcoNJGGCDWHiLRXH2OQWkeTsiGe0vjG2skTcrl0LXkinRAXo79RU1DaPFDB1Q==}
-
-  '@syncfusion/ej2-navigations@28.2.6':
-    resolution: {integrity: sha512-ThpjXVtntfapUX1ep0HvDDBHp5ERnRdRusBOuNONz74hiW23NnlOGjkSFZSJ1qctlpMAuwQXLej4oKikCAjL8w==}
-
-  '@syncfusion/ej2-notifications@28.2.3':
-    resolution: {integrity: sha512-Nkw3XuH5qw0QKEq3m0hAraPIVRVEYUDJgjQGEJZrKCtQCST1t8EPUAD+DjT63HVpzwXK0LGAFWkZgXLevf75Bw==}
-
-  '@syncfusion/ej2-popups@28.2.9':
-    resolution: {integrity: sha512-yhqUlhXOAL4WQHjqAFcqjnCxWsflya0uSfHqxkSXdyoaEvAlc0KsKop5nn7HyB1OqLQbSkBH7pn9yJd6QJYYkw==}
-
-  '@syncfusion/ej2-react-base@28.2.7':
-    resolution: {integrity: sha512-SWZ26XO6kF9p2MNpUnj6fUozy4p/XMnQOAdlxCnjxh3JuphCQ/Sd1sUOUHdANuLIy7e3lohOGzdfxq4yYnxgsg==}
-
-  '@syncfusion/ej2-react-buttons@28.2.7':
-    resolution: {integrity: sha512-p039wTCf7REcHpJUVDwOz8P8VzmJtR0d5cgYaSZq/iFGRTG5N16j04UmE3nDoCI9cimr/wBuuMyS7f8AfdhnZw==}
-
-  '@syncfusion/ej2-react-calendars@28.2.9':
-    resolution: {integrity: sha512-U8HGdZHMIuSxjts3VDKGqm2l+9aziWJj2AFQHSivmFzCsau1LlJRSqXNVi1uKlsSn7MJdGDbfByoeczApQtujQ==}
-
-  '@syncfusion/ej2-react-dropdowns@28.2.9':
-    resolution: {integrity: sha512-C1SQFfiXvl7+shV/3WyRGNc93IoqGjUqFLUrOUXm4iuDpZRX/32LKVU51fpy/H2wZXXZM48hBL4zfHmGOMEI9w==}
-
-  '@syncfusion/ej2-react-inputs@28.2.9':
-    resolution: {integrity: sha512-ihu9/AZ4LBRlSzx+TwvTK/3fUJjO/H0Yfd9h8Yf00cfL8Y1dVRdKI1rAdrR36wK3CKMQhDFvJF1zfXFhY0Y3YA==}
-
-  '@syncfusion/ej2-react-navigations@28.2.6':
-    resolution: {integrity: sha512-Q1qrpj81HEo2Robyx0t+g1PC+jN7dlPmAH+ej1FctCPJoLhRo6hUGNhy6uo3dfEPcfyMavkW1UHIXDrAATtYCg==}
-
-  '@syncfusion/ej2-react-schedule@28.2.7':
-    resolution: {integrity: sha512-ueVRvxt86KLG1wGDJPUzG+OGYQO+IdkfbRtHtiZhFZubwA91Cucn2k0st1ojaL7+qwsGIxQZVgXRyTBgp1o0SQ==}
-
-  '@syncfusion/ej2-react-splitbuttons@28.2.3':
-    resolution: {integrity: sha512-NJOYu0y6iKoxvzc9ebFSA3uxX1hfnlEgZPqL0z88xUJ5rz+l2QgbqJDCPbTb3Tdd9Ibhb1A8Nhz17XYcLDt2uQ==}
-
-  '@syncfusion/ej2-schedule@28.2.7':
-    resolution: {integrity: sha512-1z2cXvC7wcdcxiIgpN7Vp7dJxLHgzJKI+mi+3MdfufcDTc7Bb3oKtR4vcMmVJTQyBYdm0uL4qJGom+9SWw4cBw==}
-
-  '@syncfusion/ej2-splitbuttons@28.2.3':
-    resolution: {integrity: sha512-8PWYWo+kZgV2JfPkqe6riToKO7blxNBFMo083HdbaE2z76gKkB1Eg3JNCJU2NIqlsb8eZX1eBHd6JoUbTEkgow==}
 
   '@tailwindcss/node@4.0.9':
     resolution: {integrity: sha512-tOJvdI7XfJbARYhxX+0RArAhmuDcczTC46DGCEziqxzzbIaPnfYaIyRT31n4u8lROrsO7Q6u/K9bmQHL2uL1bQ==}
@@ -1942,6 +1863,9 @@ packages:
     engines: {node: ^8.16.0 || ^10.6.0 || >=11.0.0}
     os: [darwin]
 
+  fullcalendar@6.1.15:
+    resolution: {integrity: sha512-CFnh1yswjRh9puJVDk8VGwTlyZ6eXxr4qLI7QCA0+bozyAm+BluP1US5mOtgk0gEq23nQxGSNDoBvAraz++saQ==}
+
   function-bind@1.1.2:
     resolution: {integrity: sha512-7XHNxH7qX9xG5mIwxkhumTox/MIRNcOgDrxWsMt2pAr23WHp6MrRlN7FBSFpCpr+oVO0F744iUgR82nJMfG2SA==}
 
@@ -2731,8 +2655,8 @@ packages:
     resolution: {integrity: sha512-OCVPnIObs4N29kxTjzLfUryOkvZEq+pf8jTF0lg8E7uETuWHA+v7j3c/xJmiqpX450191LlmZfUKkXxkTry7nA==}
     engines: {node: ^10 || ^12 || >=14}
 
-  preact@10.26.4:
-    resolution: {integrity: sha512-KJhO7LBFTjP71d83trW+Ilnjbo+ySsaAgCfXOXUlmGzJ4ygYPWmysm77yg4emwfmoz3b22yvH5IsVFHbhUaH5w==}
+  preact@10.12.1:
+    resolution: {integrity: sha512-l8386ixSsBdbreOAkqtrwqHwdvR35ID8c3rKPa8lCWuO86dBi32QWHV4vfsZK1utLLFMvw+Z5Ad4XLkZzchscg==}
 
   prelude-ls@1.2.1:
     resolution: {integrity: sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==}
@@ -3467,6 +3391,38 @@ snapshots:
 
   '@floating-ui/utils@0.2.9': {}
 
+  '@fullcalendar/core@6.1.15':
+    dependencies:
+      preact: 10.12.1
+
+  '@fullcalendar/daygrid@6.1.15(@fullcalendar/core@6.1.15)':
+    dependencies:
+      '@fullcalendar/core': 6.1.15
+
+  '@fullcalendar/interaction@6.1.15(@fullcalendar/core@6.1.15)':
+    dependencies:
+      '@fullcalendar/core': 6.1.15
+
+  '@fullcalendar/list@6.1.15(@fullcalendar/core@6.1.15)':
+    dependencies:
+      '@fullcalendar/core': 6.1.15
+
+  '@fullcalendar/multimonth@6.1.15(@fullcalendar/core@6.1.15)':
+    dependencies:
+      '@fullcalendar/core': 6.1.15
+      '@fullcalendar/daygrid': 6.1.15(@fullcalendar/core@6.1.15)
+
+  '@fullcalendar/react@6.1.15(@fullcalendar/core@6.1.15)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
+    dependencies:
+      '@fullcalendar/core': 6.1.15
+      react: 19.0.0
+      react-dom: 19.0.0(react@19.0.0)
+
+  '@fullcalendar/timegrid@6.1.15(@fullcalendar/core@6.1.15)':
+    dependencies:
+      '@fullcalendar/core': 6.1.15
+      '@fullcalendar/daygrid': 6.1.15(@fullcalendar/core@6.1.15)
+
   '@humanfs/core@0.19.1': {}
 
   '@humanfs/node@0.16.6':
@@ -3631,12 +3587,7 @@ snapshots:
   '@pkgjs/parseargs@0.11.0':
     optional: true
 
-  '@preact/signals-core@1.8.0': {}
-
-  '@preact/signals@1.3.2(preact@10.26.4)':
-    dependencies:
-      '@preact/signals-core': 1.8.0
-      preact: 10.26.4
+  '@radix-ui/number@1.1.0': {}
 
   '@radix-ui/primitive@1.1.1': {}
 
@@ -3880,6 +3831,35 @@ snapshots:
       '@types/react': 18.3.0
       '@types/react-dom': 18.3.1
 
+  '@radix-ui/react-select@2.1.6(@types/react-dom@18.3.1)(@types/react@18.3.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
+    dependencies:
+      '@radix-ui/number': 1.1.0
+      '@radix-ui/primitive': 1.1.1
+      '@radix-ui/react-collection': 1.1.2(@types/react-dom@18.3.1)(@types/react@18.3.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@radix-ui/react-compose-refs': 1.1.1(@types/react@18.3.0)(react@19.0.0)
+      '@radix-ui/react-context': 1.1.1(@types/react@18.3.0)(react@19.0.0)
+      '@radix-ui/react-direction': 1.1.0(@types/react@18.3.0)(react@19.0.0)
+      '@radix-ui/react-dismissable-layer': 1.1.5(@types/react-dom@18.3.1)(@types/react@18.3.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@radix-ui/react-focus-guards': 1.1.1(@types/react@18.3.0)(react@19.0.0)
+      '@radix-ui/react-focus-scope': 1.1.2(@types/react-dom@18.3.1)(@types/react@18.3.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@radix-ui/react-id': 1.1.0(@types/react@18.3.0)(react@19.0.0)
+      '@radix-ui/react-popper': 1.2.2(@types/react-dom@18.3.1)(@types/react@18.3.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@radix-ui/react-portal': 1.1.4(@types/react-dom@18.3.1)(@types/react@18.3.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@radix-ui/react-primitive': 2.0.2(@types/react-dom@18.3.1)(@types/react@18.3.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@radix-ui/react-slot': 1.1.2(@types/react@18.3.0)(react@19.0.0)
+      '@radix-ui/react-use-callback-ref': 1.1.0(@types/react@18.3.0)(react@19.0.0)
+      '@radix-ui/react-use-controllable-state': 1.1.0(@types/react@18.3.0)(react@19.0.0)
+      '@radix-ui/react-use-layout-effect': 1.1.0(@types/react@18.3.0)(react@19.0.0)
+      '@radix-ui/react-use-previous': 1.1.0(@types/react@18.3.0)(react@19.0.0)
+      '@radix-ui/react-visually-hidden': 1.1.2(@types/react-dom@18.3.1)(@types/react@18.3.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      aria-hidden: 1.2.4
+      react: 19.0.0
+      react-dom: 19.0.0(react@19.0.0)
+      react-remove-scroll: 2.6.3(@types/react@18.3.0)(react@19.0.0)
+    optionalDependencies:
+      '@types/react': 18.3.0
+      '@types/react-dom': 18.3.1
+
   '@radix-ui/react-separator@1.1.2(@types/react-dom@18.3.1)(@types/react@18.3.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
     dependencies:
       '@radix-ui/react-primitive': 2.0.2(@types/react-dom@18.3.1)(@types/react@18.3.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -3980,169 +3960,11 @@ snapshots:
 
   '@radix-ui/rect@1.1.0': {}
 
-  '@schedule-x/calendar@2.21.1(@preact/signals@1.3.2(preact@10.26.4))(preact@10.26.4)':
-    dependencies:
-      '@preact/signals': 1.3.2(preact@10.26.4)
-      preact: 10.26.4
-
-  '@schedule-x/drag-and-drop@2.21.1': {}
-
-  '@schedule-x/events-service@2.21.1': {}
-
-  '@schedule-x/react@2.21.2(@schedule-x/calendar@2.21.1(@preact/signals@1.3.2(preact@10.26.4))(preact@10.26.4))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
-    dependencies:
-      '@schedule-x/calendar': 2.21.1(@preact/signals@1.3.2(preact@10.26.4))(preact@10.26.4)
-      react: 19.0.0
-      react-dom: 19.0.0(react@19.0.0)
-
-  '@schedule-x/theme-default@2.21.1': {}
-
   '@swc/counter@0.1.3': {}
 
   '@swc/helpers@0.5.15':
     dependencies:
       tslib: 2.8.1
-
-  '@syncfusion/ej2-base@28.2.9':
-    dependencies:
-      '@syncfusion/ej2-icons': 28.2.3
-
-  '@syncfusion/ej2-buttons@28.2.7':
-    dependencies:
-      '@syncfusion/ej2-base': 28.2.9
-
-  '@syncfusion/ej2-calendars@28.2.9':
-    dependencies:
-      '@syncfusion/ej2-base': 28.2.9
-      '@syncfusion/ej2-buttons': 28.2.7
-      '@syncfusion/ej2-inputs': 28.2.9
-      '@syncfusion/ej2-lists': 28.2.3
-      '@syncfusion/ej2-popups': 28.2.9
-
-  '@syncfusion/ej2-compression@28.2.3':
-    dependencies:
-      '@syncfusion/ej2-file-utils': 28.2.3
-
-  '@syncfusion/ej2-data@28.2.3':
-    dependencies:
-      '@syncfusion/ej2-base': 28.2.9
-
-  '@syncfusion/ej2-dropdowns@28.2.9':
-    dependencies:
-      '@syncfusion/ej2-base': 28.2.9
-      '@syncfusion/ej2-data': 28.2.3
-      '@syncfusion/ej2-inputs': 28.2.9
-      '@syncfusion/ej2-lists': 28.2.3
-      '@syncfusion/ej2-navigations': 28.2.6
-      '@syncfusion/ej2-notifications': 28.2.3
-      '@syncfusion/ej2-popups': 28.2.9
-
-  '@syncfusion/ej2-excel-export@28.2.3':
-    dependencies:
-      '@syncfusion/ej2-base': 28.2.9
-      '@syncfusion/ej2-compression': 28.2.3
-
-  '@syncfusion/ej2-file-utils@28.2.3': {}
-
-  '@syncfusion/ej2-icons@28.2.3': {}
-
-  '@syncfusion/ej2-inputs@28.2.9':
-    dependencies:
-      '@syncfusion/ej2-base': 28.2.9
-      '@syncfusion/ej2-buttons': 28.2.7
-      '@syncfusion/ej2-popups': 28.2.9
-      '@syncfusion/ej2-splitbuttons': 28.2.3
-
-  '@syncfusion/ej2-lists@28.2.3':
-    dependencies:
-      '@syncfusion/ej2-base': 28.2.9
-      '@syncfusion/ej2-buttons': 28.2.7
-      '@syncfusion/ej2-data': 28.2.3
-      '@syncfusion/ej2-popups': 28.2.9
-
-  '@syncfusion/ej2-navigations@28.2.6':
-    dependencies:
-      '@syncfusion/ej2-base': 28.2.9
-      '@syncfusion/ej2-buttons': 28.2.7
-      '@syncfusion/ej2-data': 28.2.3
-      '@syncfusion/ej2-inputs': 28.2.9
-      '@syncfusion/ej2-lists': 28.2.3
-      '@syncfusion/ej2-popups': 28.2.9
-
-  '@syncfusion/ej2-notifications@28.2.3':
-    dependencies:
-      '@syncfusion/ej2-base': 28.2.9
-      '@syncfusion/ej2-buttons': 28.2.7
-      '@syncfusion/ej2-popups': 28.2.9
-
-  '@syncfusion/ej2-popups@28.2.9':
-    dependencies:
-      '@syncfusion/ej2-base': 28.2.9
-      '@syncfusion/ej2-buttons': 28.2.7
-
-  '@syncfusion/ej2-react-base@28.2.7':
-    dependencies:
-      '@syncfusion/ej2-base': 28.2.9
-
-  '@syncfusion/ej2-react-buttons@28.2.7':
-    dependencies:
-      '@syncfusion/ej2-base': 28.2.9
-      '@syncfusion/ej2-buttons': 28.2.7
-      '@syncfusion/ej2-react-base': 28.2.7
-
-  '@syncfusion/ej2-react-calendars@28.2.9':
-    dependencies:
-      '@syncfusion/ej2-base': 28.2.9
-      '@syncfusion/ej2-calendars': 28.2.9
-      '@syncfusion/ej2-react-base': 28.2.7
-
-  '@syncfusion/ej2-react-dropdowns@28.2.9':
-    dependencies:
-      '@syncfusion/ej2-base': 28.2.9
-      '@syncfusion/ej2-dropdowns': 28.2.9
-      '@syncfusion/ej2-react-base': 28.2.7
-
-  '@syncfusion/ej2-react-inputs@28.2.9':
-    dependencies:
-      '@syncfusion/ej2-base': 28.2.9
-      '@syncfusion/ej2-inputs': 28.2.9
-      '@syncfusion/ej2-react-base': 28.2.7
-
-  '@syncfusion/ej2-react-navigations@28.2.6':
-    dependencies:
-      '@syncfusion/ej2-base': 28.2.9
-      '@syncfusion/ej2-navigations': 28.2.6
-      '@syncfusion/ej2-react-base': 28.2.7
-
-  '@syncfusion/ej2-react-schedule@28.2.7':
-    dependencies:
-      '@syncfusion/ej2-base': 28.2.9
-      '@syncfusion/ej2-react-base': 28.2.7
-      '@syncfusion/ej2-schedule': 28.2.7
-
-  '@syncfusion/ej2-react-splitbuttons@28.2.3':
-    dependencies:
-      '@syncfusion/ej2-base': 28.2.9
-      '@syncfusion/ej2-react-base': 28.2.7
-      '@syncfusion/ej2-splitbuttons': 28.2.3
-
-  '@syncfusion/ej2-schedule@28.2.7':
-    dependencies:
-      '@syncfusion/ej2-base': 28.2.9
-      '@syncfusion/ej2-buttons': 28.2.7
-      '@syncfusion/ej2-calendars': 28.2.9
-      '@syncfusion/ej2-data': 28.2.3
-      '@syncfusion/ej2-dropdowns': 28.2.9
-      '@syncfusion/ej2-excel-export': 28.2.3
-      '@syncfusion/ej2-inputs': 28.2.9
-      '@syncfusion/ej2-lists': 28.2.3
-      '@syncfusion/ej2-navigations': 28.2.6
-      '@syncfusion/ej2-popups': 28.2.9
-
-  '@syncfusion/ej2-splitbuttons@28.2.3':
-    dependencies:
-      '@syncfusion/ej2-base': 28.2.9
-      '@syncfusion/ej2-popups': 28.2.9
 
   '@tailwindcss/node@4.0.9':
     dependencies:
@@ -5261,6 +5083,15 @@ snapshots:
   fsevents@2.3.3:
     optional: true
 
+  fullcalendar@6.1.15:
+    dependencies:
+      '@fullcalendar/core': 6.1.15
+      '@fullcalendar/daygrid': 6.1.15(@fullcalendar/core@6.1.15)
+      '@fullcalendar/interaction': 6.1.15(@fullcalendar/core@6.1.15)
+      '@fullcalendar/list': 6.1.15(@fullcalendar/core@6.1.15)
+      '@fullcalendar/multimonth': 6.1.15(@fullcalendar/core@6.1.15)
+      '@fullcalendar/timegrid': 6.1.15(@fullcalendar/core@6.1.15)
+
   function-bind@1.1.2: {}
 
   function.prototype.name@1.1.6:
@@ -6077,7 +5908,7 @@ snapshots:
       picocolors: 1.1.1
       source-map-js: 1.2.1
 
-  preact@10.26.4: {}
+  preact@10.12.1: {}
 
   prelude-ls@1.2.1: {}
 

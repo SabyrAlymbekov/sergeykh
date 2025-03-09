@@ -11,9 +11,14 @@
     "preinstall": "npx only-allow pnpm"
   },
   "dependencies": {
+    "@fullcalendar/daygrid": "^6.1.15",
+    "@fullcalendar/interaction": "^6.1.15",
+    "@fullcalendar/react": "^6.1.15",
+    "@fullcalendar/timegrid": "^6.1.15",
     "@tailwindcss/postcss": "^4.0.9",
     "@tanstack/react-table": "^8.21.2",
     "@workspace/ui": "workspace:*",
+    "fullcalendar": "^6.1.15",
     "index": "link:@schedule-x/react/dist/index",
     "lucide-react": "0.456.0",
     "moment-timezone": "^0.5.47",

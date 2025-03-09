@@ -28,6 +28,7 @@ const CalendarPage = () => {
 
         {/*  </div>*/}
         {/*</div>*/}
+        <LinearGraph/>
 
       </div>
 
