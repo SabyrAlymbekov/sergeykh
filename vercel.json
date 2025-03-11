@@ -1,14 +1,16 @@
 {
-  "projects": {
-    "master": {
-      "rootDirectory": "apps/web",
-      "buildCommand": "pnpm run build",
-      "outputDirectory": ".next"
+  "crons": [
+    {
+      "path": "/api/every-minute",
+      "schedule": "* * * * *"
     },
-    "operator": {
-      "rootDirectory": "apps/operator",
-      "buildCommand": "pnpm run build",
-      "outputDirectory": ".next"
+    {
+      "path": "/api/every-hour",
+      "schedule": "0 * * * *"
+    },
+    {
+      "path": "/api/every-day",
+      "schedule": "0 0 * * *"
     }
-  }
+  ]
 }
