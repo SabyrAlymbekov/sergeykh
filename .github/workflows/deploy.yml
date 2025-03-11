@@ -38,11 +38,10 @@ jobs:
           npm run build
 
       # Шаг копирования сборок в отдельные папки для публикации
-      - name: Prepare deployment directory
+      - name: Install dependencies for master
         run: |
-          mkdir -p deploy/master deploy/operator
-          cp -R master/build/* deploy/master/
-          cp -R operator/build/* deploy/operator/
+          cd apps/master
+          npm install
 
       # Деплой на GitHub Pages с использованием action, например, peaceiris/actions-gh-pages
       - name: Deploy

@@ -44,5 +44,5 @@
   },
   "buildCommand": "pnpm run build",
   "outputDirectory": ".next",
-  "homepage": "/your-repo/master"
+  "homepage": "/sergeykhan/master"
 }

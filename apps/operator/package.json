@@ -53,5 +53,5 @@
   },
   "buildCommand": "pnpm run build",
   "outputDirectory": ".next",
-  "homepage": "/your-repo/operator"
+  "homepage": "/sergeykhan/operator"
 }
