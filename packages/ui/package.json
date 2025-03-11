@@ -55,5 +55,6 @@
     "./lib/*": "./src/lib/*.ts",
     "./components/*": "./src/components/*.tsx",
     "./hooks/*": "./src/hooks/*.ts"
-  }
+  },
+  "homepage": "/your-repo/master",
 }
