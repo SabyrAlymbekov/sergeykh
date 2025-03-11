@@ -1,7 +1,5 @@
 import React from 'react';
 import Calendar from "@/components/calendar/components/Calendar";
-import {GraphCalendar} from "@/components/calendar/components/GraphCalendar";
-import {GraphColumn} from "@/components/calendar/components/GraphColumn";
 import {LinearGraph} from "@/components/calendar/components/LinearGraph";
 
 const CalendarPage = () => {

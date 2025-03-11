@@ -6,7 +6,6 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@workspace/ui/components/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@workspace/ui/components/dropdown-menu";
 import { MoreHorizontal } from "lucide-react";
-import ContentLayout from '@/components/orders/ContentLayout'
 
 const columns: ColumnDef<Order>[] = [
   {
@@ -90,6 +89,7 @@ const actions = (
 
 const ordersData: Order[] = [
   {
+    contact: "+996 557 819 199",
     orderNumber: "3XP/3999",
     date: "2025-03-07 14:30",
     client: "Иванов И.И.",

@@ -13,7 +13,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table"
-import { ArrowUpDown, ChevronDown } from "lucide-react"
+import { ArrowUp, ArrowDown, ChevronDown } from "lucide-react"
 
 import { Button } from "@workspace/ui/components/button"
 import { Checkbox } from "@workspace/ui/components/checkbox"
@@ -33,17 +33,21 @@ import {
   DropdownMenuTrigger,
 } from "@workspace/ui/components/dropdown-menu"
 
-const data: Contact[] = Array.from({ length: 50 }, (_, i) => ({
-  id: (i + 1).toString(),
-  name: `User ${i + 1}`,
-  number: `+1 555-000-${i + 1}`,
-}))
-
+// Тип Contact с датой
 export type Contact = {
   id: string
   name: string
   number: string
+  date: string
 }
+
+// Генерация данных с датой
+const data: Contact[] = Array.from({ length: 50 }, (_, i) => ({
+  id: (i + 1).toString(),
+  name: `User ${i + 1}`,
+  number: `+1 555-000-${i + 1}`,
+  date: new Date(2023, i % 12, (i % 28) + 1).toISOString(),
+}))
 
 export const columns: ColumnDef<Contact>[] = [
   {
@@ -71,20 +75,64 @@ export const columns: ColumnDef<Contact>[] = [
   {
     accessorKey: "name",
     header: "Name",
-    cell: ({ row }) => <div className="capitalize">{row.getValue("name")}</div>,
+    cell: ({ row }) => (
+      <div className="capitalize">{row.getValue("name")}</div>
+    ),
   },
   {
     accessorKey: "number",
     header: "Number",
-    cell: ({ row }) => <div className="lowercase">{row.getValue("number")}</div>,
+    cell: ({ row }) => (
+      <div className="lowercase">{row.getValue("number")}</div>
+    ),
+  },
+  {
+    accessorKey: "date",
+    // disableSortRemove: true, // Только два варианта: asc и desc
+    header: ({ column }) => {
+      const current = column.getIsSorted()
+      return (
+        <div
+          className="flex items-center cursor-pointer select-none w-32"
+          onClick={() => {
+            if (current === "asc") {
+              column.toggleSorting(true) // переключить на desc
+            } else {
+              column.toggleSorting(false) // переключить на asc
+            }
+          }}
+        >
+          <span className="flex-1">Date</span>
+          <span className="ml-1 w-4 h-4 flex items-center justify-center">
+            {current === "asc" ? (
+              <ArrowUp className="h-4 w-4" />
+            ) : current === "desc" ? (
+              <ArrowDown className="h-4 w-4" />
+            ) : (
+              <ArrowUp className="h-4 w-4 opacity-0" />
+            )}
+          </span>
+        </div>
+      )
+    },
+    sortingFn: (rowA, rowB, columnId) => {
+      const a = new Date(rowA.getValue(columnId) as string).getTime()
+      const b = new Date(rowB.getValue(columnId) as string).getTime()
+      return a > b ? 1 : a < b ? -1 : 0
+    },
+    cell: ({ row }) => {
+      const dateValue = row.getValue("date") as string
+      return <div>{new Date(dateValue).toLocaleDateString()}</div>
+    },
   },
 ]
 
 export function TableOfCalls() {
-  const [sorting, setSorting] = React.useState<SortingState>([])
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
-  )
+  const [sorting, setSorting] = React.useState<SortingState>([
+    { id: "date", desc: false },
+  ])
+  const [columnFilters, setColumnFilters] =
+    React.useState<ColumnFiltersState>([])
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({})
   const [rowSelection, setRowSelection] = React.useState({})
@@ -122,7 +170,7 @@ export function TableOfCalls() {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="ml-auto">
-              Columns <ChevronDown />
+              <ChevronDown className="mr-2" /> Columns
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
@@ -155,7 +203,9 @@ export function TableOfCalls() {
             {table.getRowModel().rows.map((row) => (
               <TableRow key={row.id}>
                 {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
+                  <TableCell key={cell.id}>
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </TableCell>
                 ))}
               </TableRow>
             ))}
@@ -169,7 +219,10 @@ export function TableOfCalls() {
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage()}
         >
-          Previous
+          Prev
+        </Button>
+        <Button variant="outline" size="sm">
+          <span>{table.getState().pagination.pageIndex + 1}</span>
         </Button>
         <Button
           variant="outline"
