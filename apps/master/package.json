@@ -43,5 +43,6 @@
     "node": ">=20"
   },
   "buildCommand": "pnpm run build",
-  "outputDirectory": ".next"
+  "outputDirectory": ".next",
+  "homepage": "/your-repo/master"
 }

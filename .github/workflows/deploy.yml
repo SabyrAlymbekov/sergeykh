@@ -1,0 +1,52 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main  # или ваша основная ветка
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      # Шаг сборки приложения master
+      - name: Install dependencies for master
+        run: |
+          cd master
+          npm install
+      - name: Build master
+        run: |
+          cd master
+          npm run build
+
+      # Шаг сборки приложения operator
+      - name: Install dependencies for operator
+        run: |
+          cd operator
+          npm install
+      - name: Build operator
+        run: |
+          cd operator
+          npm run build
+
+      # Шаг копирования сборок в отдельные папки для публикации
+      - name: Prepare deployment directory
+        run: |
+          mkdir -p deploy/master deploy/operator
+          cp -R master/build/* deploy/master/
+          cp -R operator/build/* deploy/operator/
+
+      # Деплой на GitHub Pages с использованием action, например, peaceiris/actions-gh-pages
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.MY_GH_PAGES_TOKEN }}
+          publish_dir: ./deploy
