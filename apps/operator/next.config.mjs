@@ -1,7 +1,16 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  transpilePackages: ["@workspace/ui"],
-  basePath: '/sergeykhan/master'
-}
+  // Включаем статический экспорт (Next.js 13.3+)
+  output: 'export',
 
-export default nextConfig
+  // Если нужно транспилить локальные пакеты
+  transpilePackages: ["@workspace/ui"],
+
+  // Настраиваем базовый путь, совпадающий с URL GitHub Pages
+  basePath: '/sergeykhan/operator',
+
+  // Откуда грузятся ассеты (CSS, JS)
+  assetPrefix: '/sergeykhan/operator',
+};
+
+export default nextConfig;

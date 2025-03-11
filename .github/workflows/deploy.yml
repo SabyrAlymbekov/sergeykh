@@ -3,49 +3,63 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches:
-      - main  # или ваша основная ветка
+      - main  # ваша основная ветка
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
+      # 1) Выкачиваем репозиторий
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      # 2) Настраиваем Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '16'
+          node-version: '18'  # можно 16+, но лучше 18
 
-      # Шаг сборки приложения master
-      - name: Install dependencies for master
+      # 3) Устанавливаем зависимости в корне (если у вас есть root package.json, monorepo и т.д.)
+      - name: Install root dependencies
         run: |
-          cd master
           npm install
+
+      # 4) Сборка приложения master
       - name: Build master
-        run: |
-          cd master
-          npm run build
-
-      # Шаг сборки приложения operator
-      - name: Install dependencies for operator
-        run: |
-          cd operator
-          npm install
-      - name: Build operator
-        run: |
-          cd operator
-          npm run build
-
-      # Шаг копирования сборок в отдельные папки для публикации
-      - name: Install dependencies for master
         run: |
           cd apps/master
           npm install
+          npm run build  # в package.json должен быть скрипт, запускающий next build && next export
+          cd ../..       # возвращаемся в корень
 
-      # Деплой на GitHub Pages с использованием action, например, peaceiris/actions-gh-pages
+      # 5) Копируем результат сборки master в папку deploy/master
+      - name: Copy master build
+        run: |
+          mkdir -p deploy/master
+          cp -R apps/master/out/* deploy/master/
+
+      # 6) Сборка приложения operator
+      - name: Build operator
+        run: |
+          cd apps/operator
+          npm install
+          npm run build
+          cd ../..
+
+      # 7) Копируем результат сборки operator в папку deploy/operator
+      - name: Copy operator build
+        run: |
+          mkdir -p deploy/operator
+          cp -R apps/operator/out/* deploy/operator/
+
+      # (Необязательно) Создаём .nojekyll, чтобы GitHub Pages не обрабатывал файлы Jekyll
+      - name: Create .nojekyll
+        run: |
+          touch deploy/.nojekyll
+
+      # 8) Деплой в ветку gh-pages
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
-          github_token: ${{ secrets.MY_GH_PAGES_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}  # или ваш секретный токен
           publish_dir: ./deploy
