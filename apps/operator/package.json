@@ -1,5 +1,5 @@
 {
-  "name": "Operator",
+  "name": "operator",
   "version": "0.0.1",
   "type": "module",
   "private": true,
@@ -20,7 +20,7 @@
     "@radix-ui/react-slot": "^1.1.2",
     "@radix-ui/react-toast": "^1.2.6",
     "@tailwindcss/postcss": "^4.0.9",
-    "@tanstack/react-table": "^8.21.2",
+    "@tanstack/react-table": "^8.22.0",
     "@workspace/ui": "workspace:*",
     "date-fns": "^4.1.0",
     "fullcalendar": "^6.1.15",

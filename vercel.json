@@ -1,0 +1,14 @@
+{
+  "projects": {
+    "master": {
+      "rootDirectory": "apps/web",
+      "buildCommand": "pnpm run build",
+      "outputDirectory": ".next"
+    },
+    "operator": {
+      "rootDirectory": "apps/operator",
+      "buildCommand": "pnpm run build",
+      "outputDirectory": ".next"
+    }
+  }
+}
