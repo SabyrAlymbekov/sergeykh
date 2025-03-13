@@ -20,6 +20,11 @@ export const sidebar_items = [
                 url: "/orders",
                 icon: ClipboardList,
             },
+          {
+                title: "Взятые заказы",
+                url: "/orders-taken",
+                icon: ClipboardList,
+            },
             {
                 title: "Календарь загруженности",
                 url: "/calendar",

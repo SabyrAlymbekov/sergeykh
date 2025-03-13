@@ -6,11 +6,11 @@ const nextConfig = {
   // Если нужно транспилить локальные пакеты
   transpilePackages: ["@workspace/ui"],
 
-  // Настраиваем базовый путь, совпадающий с URL GitHub Pages
-  basePath: '/sergeykhan/master',
-
-  // Откуда грузятся ассеты (CSS, JS)
-  assetPrefix: '/sergeykhan/master',
+  // // Настраиваем базовый путь, совпадающий с URL GitHub Pages
+  // basePath: '/sergeykhan/master',
+  //
+  // // Откуда грузятся ассеты (CSS, JS)
+  // assetPrefix: '/sergeykhan/master',
 };
 
 export default nextConfig;

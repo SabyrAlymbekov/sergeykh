@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useRouter } from "next/navigation"; // Импортируем useRouter
 import {
   ColumnDef,
   SortingState,
@@ -32,8 +33,9 @@ import {
 } from "@workspace/ui/components/table";
 
 export type Order = {
+  id: string; // Добавляем ID для навигации
   orderNumber: string;
-  date: string; // e.g. "2025-03-07 14:30"
+  date: string;
   client: string;
   contact: string;
   address: string;
@@ -66,6 +68,8 @@ export function OrdersDataTable({ data, columns }: OrdersDataTableProps) {
     status: true,
     actions: false,
   });
+
+  const router = useRouter(); // Инициализируем useRouter
 
   const table = useReactTable({
     data,
@@ -124,10 +128,7 @@ export function OrdersDataTable({ data, columns }: OrdersDataTableProps) {
                     <TableHead key={header.id}>
                       {header.isPlaceholder
                         ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                        : flexRender(header.column.columnDef.header, header.getContext())}
                     </TableHead>
                   ))}
                 </TableRow>
@@ -136,13 +137,14 @@ export function OrdersDataTable({ data, columns }: OrdersDataTableProps) {
             <TableBody>
               {table.getRowModel().rows?.length ? (
                 table.getRowModel().rows.map((row) => (
-                  <TableRow key={row.id}>
+                  <TableRow
+                    key={row.id}
+                    className="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800"
+                    onClick={() => router.push(`/orders/${row.original.id}`)} // Навигация при клике
+                  >
                     {row.getVisibleCells().map((cell) => (
                       <TableCell key={cell.id}>
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
+                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
                       </TableCell>
                     ))}
                   </TableRow>
