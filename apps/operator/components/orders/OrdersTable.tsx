@@ -64,7 +64,7 @@ export function OrdersDataTable({ data, columns }: OrdersDataTableProps) {
     executionTime: false,
     master: false,
     status: true,
-    actions: false,
+    actions: true,
   });
 
   const table = useReactTable({
