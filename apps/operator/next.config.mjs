@@ -10,7 +10,7 @@ const nextConfig = {
   basePath: '/sergeykhan/operator',
 
   // Откуда грузятся ассеты (CSS, JS)
-  assetPrefix: '/sergeykhan/operator',
+  assetPrefix: '../../packages/ui',
 };
 
 export default nextConfig;
