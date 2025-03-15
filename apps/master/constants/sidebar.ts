@@ -36,26 +36,27 @@ export const sidebar_items = [
                 icon: ChartColumn,
             },
         ]
-    }, {
-        name: "Информация",
-        list: [
-            {
-                title: "График работы",
-                url: "/schedule",
-                icon: CalendarCheck
-            }, {
-                title: "Профиль",
-                url: "/profile",
-                icon: UserRound
-            }, {
-                title: "Рейтинг",
-                url: "/leaderboard",
-                icon: ChartNoAxesCombined
-            }, {
-                title: "Настройки",
-                url: "/settings",
-                icon: Settings
-            }
-        ]
-    }
+    },
+    // {
+    //     name: "Информация",
+    //     list: [
+    //         {
+    //             title: "График работы",
+    //             url: "/schedule",
+    //             icon: CalendarCheck
+    //         }, {
+    //             title: "Профиль",
+    //             url: "/profile",
+    //             icon: UserRound
+    //         }, {
+    //             title: "Рейтинг",
+    //             url: "/leaderboard",
+    //             icon: ChartNoAxesCombined
+    //         }, {
+    //             title: "Настройки",
+    //             url: "/settings",
+    //             icon: Settings
+    //         }
+    //     ]
+    // }
 ]
