@@ -31,7 +31,7 @@ const OrdersTab = () => {
                     }}>Новые</Button>
                 </div>
 
-        } bg={typeof window !== 'undefined' && window.innerWidth < 768 ? ContentLayoutBg.Transperent : ContentLayoutBg.Grey}>
+        } bg={typeof window !== 'undefined' && window.innerWidth < 768 ? ContentLayoutBg.Transperent : ContentLayoutBg.Black}>
             {
             ordersType === 'all' ? (
                     <AllOrders />
