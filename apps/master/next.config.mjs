@@ -7,7 +7,7 @@ const nextConfig = {
   transpilePackages: ["@workspace/ui"],
 
   // Настраиваем базовый путь, совпадающий с URL GitHub Pages
-  basePath: '/sergeykhan/master',
+  // basePath: '/sergeykhan/master',
 
   // Откуда грузятся ассеты (CSS, JS)
   // assetPrefix: '../../packages/ui',
