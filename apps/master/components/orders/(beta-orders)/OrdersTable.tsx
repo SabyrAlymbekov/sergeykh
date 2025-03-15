@@ -3,7 +3,7 @@
 import * as React from "react";
 import { useRouter } from "next/navigation"; // Импортируем useRouter
 import {
-  ColumnDef,
+  // ColumnDef,
   SortingState,
   VisibilityState,
   getCoreRowModel,
@@ -32,25 +32,7 @@ import {
   TableRow,
 } from "@workspace/ui/components/table";
 
-export type Order = {
-  id: string; // Добавляем ID для навигации
-  orderNumber: string;
-  date: string;
-  client: string;
-  contact: string;
-  address: string;
-  problem: string;
-  cost: string;
-  executionTime: string;
-  master: string;
-  status: string;
-  actions: React.ReactNode;
-};
-
-interface OrdersDataTableProps {
-  data: Order[];
-  columns: ColumnDef<Order>[];
-}
+import {OrdersDataTableProps} from "@/constants/orders"
 
 export function OrdersDataTable({ data, columns }: OrdersDataTableProps) {
   const [sorting, setSorting] = React.useState<SortingState>([]);

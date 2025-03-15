@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   // Включаем статический экспорт (Next.js 13.3+)
-  output: 'export',
+  // output: 'export',
 
   // Если нужно транспилить локальные пакеты
   transpilePackages: ["@workspace/ui"],

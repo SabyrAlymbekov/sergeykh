@@ -6,7 +6,7 @@ import { ContentLayoutBg } from '@/constants/orders'
 import { Button } from '@workspace/ui/components/button'
 import AllOrders from './AllOrders'
 import ActiveOrders from './ActiveOrders'
-import NewOrders from './NewOrders'
+import NewOrders from './(beta-orders)/newOrders'
 
 type OrdersTypeT = 'all' | 'active' | 'new' 
 
@@ -34,7 +34,7 @@ const OrdersTab = () => {
         } bg={typeof window !== 'undefined' && window.innerWidth < 768 ? ContentLayoutBg.Transperent : ContentLayoutBg.Grey}>
             {
             ordersType === 'all' ? (
-                <AllOrders />
+                    <AllOrders />
             ) : ordersType === 'active' ? (
                     <ActiveOrders></ActiveOrders>
                 ) : (

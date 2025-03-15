@@ -2,7 +2,7 @@
 // app/(root)/orders/[id]/page.tsx
 import { use } from "react";
 import OrderDetails from "@/components/orders/order-page/orderId";
-import { Order } from "@/constants/types";
+import { Order } from "@/constants/orders";
 import { ActionsMenu } from "@/constants/actionMenu";
 
 

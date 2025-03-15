@@ -33,8 +33,9 @@ import { Textarea } from "@workspace/ui/components/textarea";
 import { Separator } from "@workspace/ui/components/separator";
 import {DatePicker} from "@/components/orders-taken/DatePicker";
 import {TimePickerComponent} from "@/components/orders-taken/TimePicker";
+import {Order} from "@/constants/orders";
 
-import { Order } from "@/constants/types";
+
 
 
 
