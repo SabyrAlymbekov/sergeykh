@@ -5,7 +5,12 @@
     "baseUrl": ".",
     "paths": {
       "@workspace/ui/*": ["./src/*"]
-    }
+    },
+    "moduleResolution": "node",
+    "module": "ESNext",
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
+    "types": ["tailwindcss"]
   },
   "include": ["."],
   "exclude": ["node_modules", "dist"]
