@@ -4,7 +4,16 @@
     //"outDir": "dist"
     "baseUrl": ".",
     "paths": {
-      "@workspace/ui/*": ["./src/*"]
+      "@workspace/ui/*": ["./src/*"],
+      "@components/*": ["@workspace/ui/components/*"],
+      "@utils/*": ["@workspace/ui/lib/utils/*"],
+      "@hooks/*": ["@workspace/ui/hooks/*"],
+      "@lib/*": ["@workspace/ui/lib/*"],
+      "@ui/*": ["@workspace/ui/components/*"],
+      "@shared/*": ["./src/components/shared/*"],
+      "@/*": ["./src/*"]
+
+
     },
     "moduleResolution": "node",
     "module": "ESNext",
@@ -12,6 +21,6 @@
     "allowSyntheticDefaultImports": true,
     "types": ["tailwindcss"]
   },
-  "include": ["."],
+  "include": ["src"],
   "exclude": ["node_modules", "dist"]
 }
