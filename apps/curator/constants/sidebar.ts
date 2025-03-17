@@ -3,11 +3,7 @@ import {
     ClipboardList,
     UserPlus,
     ChartColumn,
-    UserRound,
-    CalendarCheck,
-    Settings,
-    ChartNoAxesCombined,
-    Headset, BookPlus
+    Headset, BookPlus, Anvil
 } from 'lucide-react';
 
 export const sidebar_items = [
@@ -37,7 +33,7 @@ export const sidebar_items = [
             },{
                 title: "Управление мастерами",
                 url: "/master-management",
-                icon: UserPlus,
+                icon: Anvil,
             },
             {
                 title: "Финансы",
