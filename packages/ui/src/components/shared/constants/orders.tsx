@@ -42,6 +42,9 @@ export type Order = {
 export interface OrdersDataTableProps {
     data: Order[];
     columns: ColumnDef<Order>[];
+    status?: "curator";
+    isEdit?: boolean;
+    onSelectedChange?: (selected: string[]) => void;
 }
 
 
