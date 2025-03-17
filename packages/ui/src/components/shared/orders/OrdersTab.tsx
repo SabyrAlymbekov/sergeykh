@@ -46,7 +46,7 @@ const OrdersTab: React.FC<OrdersTabProps> = ({ status }) => {
             case 'non-active':
                 return <NonActiveOrders />;
             case 'active':
-                return <ActiveOrders isActiveEdit={true} onSelectedChange={() => {}} />;
+                return <ActiveOrders isActiveEdit={false} onSelectedChange={() => {}} />;
             default:
                 return null;
         }
