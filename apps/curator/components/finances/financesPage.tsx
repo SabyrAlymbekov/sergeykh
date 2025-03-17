@@ -6,7 +6,7 @@ import {HistoryPayments} from "@/components/finances/chartFinances/historyPaymen
 const FinancesPage = () => {
   const [isVisible] = useState(true);
   const balance = 1000;
-  const currency = '₽';
+  const currency = '₸';
 
   return (
     <div className="w-full container">
