@@ -28,15 +28,10 @@ import {
   AccordionContent,
 } from "@workspace/ui/components/accordion"
 import {ArrowDown, ArrowUp} from "lucide-react";
+import {Contact} from "@shared/constants/types";
 
 // Определение типа контакта
-export type Contact = {
-  id: string
-  name: string
-  number: string
-  date: string
-  status?: string
-}
+
 
 // Пример начальных данных (при необходимости замените на реальные данные)
 const initialData: Contact[] = Array.from({ length: 50 }, (_, i) => ({

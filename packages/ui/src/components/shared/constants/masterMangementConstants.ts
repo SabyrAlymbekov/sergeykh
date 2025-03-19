@@ -1,7 +1,7 @@
 // "use client";
 import {ActionsMenu} from "@workspace/ui/components/shared/constants/actionMenu";
 import * as React from "react";
-import { Master } from "@shared/constants/types";
+import {Curator, Master, Operator} from "@shared/constants/types";
 import {ColumnDef, Row} from "@tanstack/react-table";
 
 export const mastersData: Master[] = [
@@ -197,6 +197,159 @@ export const mastersData: Master[] = [
 ];
 
 
+export const curatorsData: Curator[] = [
+    {
+        id: "1",
+        name: "Иванов Иван",
+        balance: 1000,
+        masters: [
+            {
+                id: "1",
+                name: "John Doe",
+                balance: 1000,
+                orders: [
+                    {
+                        id: "1",
+                        contact: "+996 557 819 199",
+                        orderNumber: "3XP/3999",
+                        date: "2025-03-07 14:30",
+                        client: "Иванов И.И.",
+                        address: "ул. Абая, 10",
+                        problem: "Протечка крана",
+                        cost: "5000 ₸",
+                        executionTime: "2025-03-08 09:00",
+                        master: "John Doe",
+                        status: "Открытый",
+                        actions: ActionsMenu,
+                    },
+                    {
+                        id: "2",
+                        contact: "+996 555 123 456",
+                        orderNumber: "4XT/4000",
+                        date: "2025-03-08 10:15",
+                        client: "Петров П.П.",
+                        address: "ул. Назарбаева, 25",
+                        problem: "Не работает розетка",
+                        cost: "3500 ₸",
+                        executionTime: "2025-03-08 16:00",
+                        master: "John Doe",
+                        status: "В работе",
+                        actions: ActionsMenu,
+                    },
+                ],
+            },
+            {
+                id: "2",
+                name: "Jane Smith",
+                balance: 1500,
+                orders: [
+                    {
+                        id: "3",
+                        contact: "+996 700 987 654",
+                        orderNumber: "5YT/4001",
+                        date: "2025-03-09 12:45",
+                        client: "Семенова А.А.",
+                        address: "ул. Манаса, 5",
+                        problem: "Засор в канализации",
+                        cost: "7500 ₸",
+                        executionTime: "2025-03-09 18:30",
+                        master: "Jane Smith",
+                        status: "Ожидание",
+                        actions: ActionsMenu,
+                    }
+                ]
+            }]
+    }
+]
+
+
+export const operatorsData: Operator[] = [
+    {
+        id: "1",
+        name: "Иван Авен",
+        balance: 1000,
+        called: [
+            {
+                id: "213",
+                name: "Popkin Leha",
+                number: "+99999999",
+                date: "2025-03-07 14:30",
+                status: "called"
+            },
+            {
+                id: "213",
+                name: "Popkin Leha",
+                number: "+99999999",
+                date: "2025-03-07 14:30",
+                status: "called"
+            },
+            {
+                id: "213",
+                name: "Popkin Leha",
+                number: "+99999999",
+                date: "2025-03-07 14:30",
+                status: "called"
+            },
+        ]
+    },
+    {
+        id: "2",
+        name: "Иван Авен",
+        balance: 1000,
+        called: [
+            {
+                id: "213",
+                name: "Popkin Leha",
+                number: "+99999999",
+                date: "2025-03-07 14:30",
+                status: "called"
+            },
+            {
+                id: "213",
+                name: "Popkin Leha",
+                number: "+99999999",
+                date: "2025-03-07 14:30",
+                status: "called"
+            },
+            {
+                id: "213",
+                name: "Popkin Leha",
+                number: "+99999999",
+                date: "2025-03-07 14:30",
+                status: "called"
+            },
+        ]
+    },
+    {
+        id: "3",
+        name: "Иван Авен",
+        balance: 1000,
+        called: [
+            {
+                id: "213",
+                name: "Popkin Leha",
+                number: "+99999999",
+                date: "2025-03-07 14:30",
+                status: "called"
+            },
+            {
+                id: "213",
+                name: "Popkin Leha",
+                number: "+99999999",
+                date: "2025-03-07 14:30",
+                status: "called"
+            },
+            {
+                id: "213",
+                name: "Popkin Leha",
+                number: "+99999999",
+                date: "2025-03-07 14:30",
+                status: "called"
+            },
+        ]
+    },
+]
+
 export const useColumns = () =>
     React.useMemo<ColumnDef<Master>[]>(
         () => [
@@ -216,7 +369,7 @@ export const useColumns = () =>
             },
             {
                 accessorKey: "orders",
-                header: "Qnt of Orders (current)",
+                header: "Qnt of Orders",
                 // Используем типизацию параметра row для корректного доступа к данным
                 cell: ({ row }: { row: Row<Master> }) => row.original.orders?.length ?? 0,
                 enableSorting: true,
