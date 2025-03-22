@@ -21,13 +21,6 @@ import { Calendar } from "@workspace/ui/components/calendar"
 import { Textarea } from "@workspace/ui/components/textarea"
 import { format } from "date-fns"
 import { CalendarIcon } from "lucide-react"
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@workspace/ui/components/select"
 
 const FormSchema = z.object({
     number: z.string().min(10, { message: "Введите корректный номер телефона." }),
@@ -54,7 +47,6 @@ export function OrderFormComponent() {
             equipmentType: "",
             price: 0,
             promotions: "",
-            status: "мастер",
             deadline: new Date(),
         },
     })
@@ -181,27 +173,6 @@ export function OrderFormComponent() {
                                 <Input placeholder="Введите акции" {...field} />
                             </FormControl>
                             <FormDescription>Укажите действующие акции или скидки.</FormDescription>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-                <FormField
-                    control={form.control}
-                    name="status"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Статус</FormLabel>
-                            <FormControl>
-                                <Select onValueChange={field.onChange} value={field.value}>
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Выберите статус" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="мастер">Мастер</SelectItem>
-                                        <SelectItem value="оператор">Оператор</SelectItem>
-                                    </SelectContent>
-                                </Select>
-                            </FormControl>
                             <FormMessage />
                         </FormItem>
                     )}
