@@ -31,9 +31,10 @@ import {
     TableHeader,
     TableRow,
 } from "@workspace/ui/components/table";
-import { mastersData, useColumns } from "@shared/constants/masterMangementConstants";
+import { useColumns } from "@shared/constants/masterMangementConstants";
+import {Master} from "@shared/constants/types";
 
-const MastersTable = () => {
+const MastersTable = ({mastersData} : {mastersData : Master[]}) => {
     const router = useRouter();
     const [sorting, setSorting] = React.useState<SortingState>([]);
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);

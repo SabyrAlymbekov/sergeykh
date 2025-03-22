@@ -1,10 +1,10 @@
 import React from 'react';
-import SignUp from "@shared/authentification/sign-up/signUp";
+import PercentagesPage from "@/components/percentages/percentagesPage";
 
 const Page = () => {
     return (
         <div>
-            <SignUp/>
+            <PercentagesPage/>
         </div>
     );
 };

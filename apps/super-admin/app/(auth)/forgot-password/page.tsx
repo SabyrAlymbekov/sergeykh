@@ -1,5 +1,5 @@
 import React from 'react';
-import {ForgotPassword} from "@/components/shared/authentification/ForgotPassword/ForgotPassword";
+import {ForgotPassword} from "@shared/authentification/ForgotPassword/ForgotPassword";
 
 const Page = () => {
     return (

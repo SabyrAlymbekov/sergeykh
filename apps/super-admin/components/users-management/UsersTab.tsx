@@ -9,6 +9,7 @@ import MastersTable from "@/components/users-management/mastersTable";
 import {ContentLayoutBg} from "@/constants/constants";
 import CuratorsTable from "@/components/users-management/curatorsTable";
 import OperatorsTable from "@/components/users-management/operatorsTable";
+import {mastersData} from "@shared/constants/masterMangementConstants";
 
 type UsersTypeT = 'curator' | 'master' | 'operator';
 
@@ -37,7 +38,7 @@ const UsersTab = () => {
             case 'curator':
                 return <CuratorsTable/>;
             case "master":
-                return <MastersTable/>;
+                return <MastersTable mastersData={mastersData}/>;
             case "operator":
                 return <OperatorsTable/>;
             default:

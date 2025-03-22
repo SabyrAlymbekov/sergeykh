@@ -350,6 +350,8 @@ export const operatorsData: Operator[] = [
     },
 ]
 
+
+
 export const useColumns = () =>
     React.useMemo<ColumnDef<Master>[]>(
         () => [

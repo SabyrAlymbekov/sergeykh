@@ -1,17 +1,17 @@
 "use client"
 
 import React, { useState } from 'react';
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
+import { cn } from "@workspace/ui/lib/utils";
 import {
     Card,
     CardContent,
     CardDescription,
     CardHeader,
     CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+} from "@workspace/ui/components/card";
+import { Input } from "@workspace/ui/components/input";
+import { Label } from "@workspace/ui/components/label";
+import {Button} from "@workspace/ui/components/button";
 
 const SignUp = () => {
     const [name, setName] = useState('');

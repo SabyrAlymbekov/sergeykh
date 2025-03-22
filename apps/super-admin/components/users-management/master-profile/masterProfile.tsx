@@ -20,10 +20,11 @@ import {
 const MasterProfile = ({ id }: { id: string }) => {
     const [topUpAmount, setTopUpAmount] = useState('');
     const [withdrawAmount, setWithdrawAmount] = useState('');
+    const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
     console.log("URL param id:", JSON.stringify(id));
 
-    // Преобразуем mastersData в массив, если он не массив.
+    // Convert mastersData to an array if necessary
     const mastersArray: Master[] = Array.isArray(mastersData)
         ? mastersData
         : Object.values(mastersData);
@@ -31,7 +32,7 @@ const MasterProfile = ({ id }: { id: string }) => {
     console.log("Masters data:", mastersArray);
     console.log("Masters IDs:", mastersArray.map(master => master.id));
 
-    // Находим мастера по id с учетом trim() для устранения лишних пробелов.
+    // Find master by id (trimming extra spaces)
     const master = mastersArray.find((master: Master) =>
         master.id.toString().trim() === id.trim()
     );
@@ -44,22 +45,28 @@ const MasterProfile = ({ id }: { id: string }) => {
     const balance = 1000;
     const currency = '₸';
 
+    const handleDeleteAccount = () => {
+        console.log("Аккаунт мастера будет удален");
+        setDeleteDialogOpen(false);
+        // Add your deletion logic here
+    };
+
     return (
         <div className="flex flex-col mt-5 gap-5">
             <h1 className="text-xl text-center md:text-2xl mb-5 font-bold">
                 Профиль мастера {master.name}
             </h1>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3  gap-16">
+            <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-16">
                 <div className="flex flex-col items-center justify-center gap-5">
                     <div className="flex flex-col items-center justify-center">
                         <h1 className="text-2xl text-gray-400">Баланс</h1>
                         <span className="text-5xl font-bold">
-              {balance} {currency}
-            </span>
+                            {balance} {currency}
+                        </span>
                     </div>
                     <div className="flex gap-5">
-                        {/* Диалог для пополнения */}
+                        {/* Dialog for topping up */}
                         <Dialog>
                             <DialogTrigger asChild>
                                 <Button variant="outline" className="w-[100px]">
@@ -84,7 +91,7 @@ const MasterProfile = ({ id }: { id: string }) => {
                                     <Button
                                         onClick={() => {
                                             console.log("Пополнить на:", topUpAmount);
-                                            // Добавьте здесь логику пополнения баланса
+                                            // Add your top-up logic here
                                         }}
                                     >
                                         Пополнить
@@ -93,7 +100,7 @@ const MasterProfile = ({ id }: { id: string }) => {
                             </DialogContent>
                         </Dialog>
 
-                        {/* Диалог для снятия */}
+                        {/* Dialog for withdrawing */}
                         <Dialog>
                             <DialogTrigger asChild>
                                 <Button variant="outline" className="w-[100px]">
@@ -118,7 +125,7 @@ const MasterProfile = ({ id }: { id: string }) => {
                                     <Button
                                         onClick={() => {
                                             console.log("Снять на:", withdrawAmount);
-                                            // Добавьте здесь логику снятия средств
+                                            // Add your withdraw logic here
                                         }}
                                     >
                                         Снять
@@ -135,6 +142,31 @@ const MasterProfile = ({ id }: { id: string }) => {
             </div>
 
             <OrdersDataTable data={master.orders} columns={columns} status="curator" />
+
+            {/* Delete Account Confirmation Dialog */}
+            <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+                <DialogTrigger asChild>
+                    <div className="flex justify-center mt-10">
+                        <Button variant="destructive" onClick={() => setDeleteDialogOpen(true)}>
+                            Удалить аккаунт
+                        </Button>
+                    </div>
+                </DialogTrigger>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Подтвердите удаление аккаунта</DialogTitle>
+                    </DialogHeader>
+                    <p>Вы уверены, что хотите удалить аккаунт мастера? Это действие необратимо.</p>
+                    <DialogFooter>
+                        <DialogClose asChild>
+                            <Button variant="outline">Отмена</Button>
+                        </DialogClose>
+                        <Button variant="destructive" onClick={handleDeleteAccount}>
+                            Удалить
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </div>
     );
 };

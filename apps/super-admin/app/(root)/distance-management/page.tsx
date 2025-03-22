@@ -1,10 +1,11 @@
 import React from 'react';
-import SignUp from "@shared/authentification/sign-up/signUp";
+import DistancePage from "@/components/distance/distancePage";
 
 const Page = () => {
     return (
         <div>
-            <SignUp/>
+            <DistancePage/>
+
         </div>
     );
 };

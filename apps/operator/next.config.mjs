@@ -8,7 +8,10 @@ const nextConfig = {
 
   // Настраиваем базовый путь, совпадающий с URL GitHub Pages
   // basePath: '/sergeykhan/operator',
-
+  webpack(config) {
+    config.cache = false;
+    return config;
+  },
   // Откуда грузятся ассеты (CSS, JS)
   // assetPrefix: '../../packages/ui',
 };

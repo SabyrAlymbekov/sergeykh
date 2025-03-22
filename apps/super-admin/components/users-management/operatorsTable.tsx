@@ -227,7 +227,7 @@ const OperatorsTable = () => {
                                     <TableRow
                                         key={row.id}
                                         className="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800"
-                                        onClick={() => router.push(`/operator-management/${row.original.id}`)}
+                                        onClick={() => router.push(`/operators-management/${row.original.id}`)}
                                     >
                                         {row.getVisibleCells().map((cell) => (
                                             <TableCell key={cell.id}>

@@ -4,7 +4,7 @@ import {
     UserPlus,
     ChartColumn,
     Headset, BookPlus, Anvil,
-    UserSearch
+    UserSearch, Percent, Podcast, FileClock
 } from 'lucide-react';
 
 export const sidebar_items = [
@@ -43,6 +43,18 @@ export const sidebar_items = [
                 title: "Управление балансами",
                 url: "/balance-management",
                 icon: Anvil,
+            },{
+                title: "Управление процентами",
+                url: "/percentages-management",
+                icon: Percent,
+            },{
+                title: "Управление дистанционкой",
+                url: "/distance-management",
+                icon: Podcast,
+            },{
+                title: "Логи",
+                url: "/logs",
+                icon: FileClock,
             },
             {
                 title: "Финансы",
