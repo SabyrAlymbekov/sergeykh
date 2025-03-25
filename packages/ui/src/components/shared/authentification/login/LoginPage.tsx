@@ -12,7 +12,7 @@ export default function LoginPage() {
                     </div>
                     SergeyKhan Inc.
                 </a>
-                <LoginForm />
+                <LoginForm/>
             </div>
         </div>
     )
