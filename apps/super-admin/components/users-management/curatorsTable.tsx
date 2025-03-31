@@ -32,40 +32,42 @@ import {
     TableRow,
 } from "@workspace/ui/components/table";
 
-// Импорт данных кураторов (предполагается, что они определены в masterMangementConstants)
-import { curatorsData } from "@shared/constants/masterMangementConstants";
+interface Curator {
+    id: string;
+    email: string;
+    role: string;
+}
 
-// Определяем столбцы для таблицы кураторов.
-// В типе Curator: id, name, balance, masters (массив мастеров)
-const columns = [
-    {
-        accessorKey: "id",
-        header: "ID",
-    },
-    {
-        accessorKey: "name",
-        header: "Name",
-    },
-    {
-        accessorKey: "balance",
-        header: "Balance",
-        cell: (info: any) => info.getValue(),
-    },
-    {
-        accessorKey: "masters",
-        header: "Qnt of Masters",
-        // Выводим количество мастеров
-        cell: (info: any) => Array.isArray(info.getValue()) ? info.getValue().length : 0,
-    },
-];
+interface CuratorsTableProps {
+    curatorsData: Curator[];
+}
 
-const CuratorsTable = () => {
+const CuratorsTable: React.FC<CuratorsTableProps> = ({ curatorsData }) => {
     const router = useRouter();
     const [sorting, setSorting] = React.useState<SortingState>([]);
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
     const [searchInput, setSearchInput] = React.useState<string>("");
-    const [selectedSearchColumn, setSelectedSearchColumn] = React.useState<string>("name");
-    const [selectedSortLabel, setSelectedSortLabel] = React.useState("Сортировка");
+    const [selectedSearchColumn, setSelectedSearchColumn] = React.useState<string>("email");
+    const [selectedSortLabel, setSelectedSortLabel] = React.useState("Sort");
+
+    // Определяем столбцы: ID, Email и Role
+    const columns = React.useMemo(
+        () => [
+            {
+                accessorKey: "id",
+                header: "ID",
+            },
+            {
+                accessorKey: "email",
+                header: "Email",
+            },
+            {
+                accessorKey: "role",
+                header: "Role",
+            },
+        ],
+        []
+    );
 
     const table = useReactTable({
         data: curatorsData,
@@ -88,22 +90,19 @@ const CuratorsTable = () => {
         setSelectedSortLabel(label);
     };
 
-    // Опции для поиска
+    // Опции для выбора колонки поиска
     const searchOptions = [
         { id: "id", label: "ID" },
-        { id: "name", label: "Name" },
-        { id: "balance", label: "Balance" },
-        { id: "masters", label: "Qnt of Masters" },
+        { id: "email", label: "Email" },
+        { id: "role", label: "Role" },
     ];
 
-    // Обновление фильтра при изменении поискового запроса
     const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
         setSearchInput(value);
         setColumnFilters([{ id: selectedSearchColumn, value }]);
     };
 
-    // При выборе новой колонки для поиска очищаем фильтр
     const handleSearchColumnChange = (columnId: string) => {
         setSelectedSearchColumn(columnId);
         setSearchInput("");
@@ -118,7 +117,7 @@ const CuratorsTable = () => {
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <Button variant="outline">
-                                Искать по:{" "}
+                                Search by:{" "}
                                 {searchOptions.find((opt) => opt.id === selectedSearchColumn)?.label}{" "}
                                 <ChevronDown />
                             </Button>
@@ -135,7 +134,7 @@ const CuratorsTable = () => {
                         </DropdownMenuContent>
                     </DropdownMenu>
                     <Input
-                        placeholder={`Введите запрос для ${
+                        placeholder={`Enter query for ${
                             searchOptions.find((opt) => opt.id === selectedSearchColumn)?.label
                         }`}
                         value={searchInput}
@@ -144,11 +143,10 @@ const CuratorsTable = () => {
                     />
                 </div>
                 <div className="flex space-x-2">
-                    {/* Управление видимостью столбцов */}
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <Button variant="outline">
-                                Столбцы <ChevronDown />
+                                Columns <ChevronDown />
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
@@ -164,7 +162,6 @@ const CuratorsTable = () => {
                             ))}
                         </DropdownMenuContent>
                     </DropdownMenu>
-                    {/* Сортировка */}
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <Button variant="outline">
@@ -172,43 +169,31 @@ const CuratorsTable = () => {
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                            <DropdownMenuItem
-                                onClick={() => handleSortChange("name", false, "Имя A-Z")}
-                            >
-                                Имя A-Z
+                            <DropdownMenuItem onClick={() => handleSortChange("id", false, "ID A-Z")}>
+                                ID A-Z
                             </DropdownMenuItem>
-                            <DropdownMenuItem
-                                onClick={() => handleSortChange("name", true, "Имя Z-A")}
-                            >
-                                Имя Z-A
+                            <DropdownMenuItem onClick={() => handleSortChange("id", true, "ID Z-A")}>
+                                ID Z-A
                             </DropdownMenuItem>
-                            <DropdownMenuItem
-                                onClick={() => handleSortChange("balance", false, "Баланс ↑")}
-                            >
-                                Баланс ↑
+                            <DropdownMenuItem onClick={() => handleSortChange("email", false, "Email A-Z")}>
+                                Email A-Z
                             </DropdownMenuItem>
-                            <DropdownMenuItem
-                                onClick={() => handleSortChange("balance", true, "Баланс ↓")}
-                            >
-                                Баланс ↓
+                            <DropdownMenuItem onClick={() => handleSortChange("email", true, "Email Z-A")}>
+                                Email Z-A
                             </DropdownMenuItem>
-                            <DropdownMenuItem
-                                onClick={() => handleSortChange("masters", false, "Мастера ↑")}
-                            >
-                                Мастера ↑
+                            <DropdownMenuItem onClick={() => handleSortChange("role", false, "Role A-Z")}>
+                                Role A-Z
                             </DropdownMenuItem>
-                            <DropdownMenuItem
-                                onClick={() => handleSortChange("masters", true, "Мастера ↓")}
-                            >
-                                Мастера ↓
+                            <DropdownMenuItem onClick={() => handleSortChange("role", true, "Role Z-A")}>
+                                Role Z-A
                             </DropdownMenuItem>
                             <DropdownMenuItem
                                 onClick={() => {
                                     setSorting([]);
-                                    setSelectedSortLabel("Сортировка");
+                                    setSelectedSortLabel("Sort");
                                 }}
                             >
-                                Сбросить сортировку
+                                Reset Sort
                             </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
@@ -250,7 +235,7 @@ const CuratorsTable = () => {
                             ) : (
                                 <TableRow>
                                     <TableCell colSpan={columns.length} className="h-24 text-center">
-                                        Нет кураторов.
+                                        No curators.
                                     </TableCell>
                                 </TableRow>
                             )}
@@ -267,10 +252,10 @@ const CuratorsTable = () => {
                     onClick={() => table.previousPage()}
                     disabled={!table.getCanPreviousPage()}
                 >
-                    Предыдущий
+                    Previous
                 </Button>
                 <span className="text-sm text-muted-foreground">
-          Страница {table.getState().pagination.pageIndex + 1} из {table.getPageCount()}
+          Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
         </span>
                 <Button
                     variant="outline"
@@ -278,7 +263,7 @@ const CuratorsTable = () => {
                     onClick={() => table.nextPage()}
                     disabled={!table.getCanNextPage()}
                 >
-                    Следующий
+                    Next
                 </Button>
             </div>
         </div>

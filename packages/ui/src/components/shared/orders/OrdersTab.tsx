@@ -4,54 +4,62 @@ import React from 'react'
 import ContentLayout from './ContentLayout'
 import { ContentLayoutBg } from '@workspace/ui/components/shared/constants/orders'
 import { Button } from '@workspace/ui/components/button'
-import Last4hours from "@shared/orders/last4hours";
-import LastWeek from "@shared/orders/lastWeek";
-import NonActiveOrders from "@shared/orders/NonActiveOrders";
-import ActiveOrders from "@shared/orders/ActiveOrders";
-import AllOrders from "@shared/orders/AllOrders";
+import Last4hours from "@shared/orders/last4hours"
+import LastDay from "@shared/orders/lastDay"
+import NonActiveOrders from "@shared/orders/NonActiveOrders"
+import ActiveOrders from "@shared/orders/ActiveOrders"
+import AllOrders from "@shared/orders/AllOrders"
 
-type OrdersTypeT = 'all' | '4hours' | 'week' | 'non-active' | 'active';
+type OrdersTypeT = 'all' | '4hours' | 'lastday' | 'non-active' | 'active'
+type UserStatusT = 'curator' | 'master'
+type AccessStatusT = 'pro' | 'max' | 'none'
 
 interface OrdersTabProps {
-    status: 'curator' | 'master';
+    status: UserStatusT
+    accessStatus?: AccessStatusT
 }
 
-// Вспомогательная функция для капитализации строки
-const capitalize = (str: string): string => {
-    return str.charAt(0).toUpperCase() + str.slice(1);
-};
+const capitalize = (str: string): string => str.charAt(0).toUpperCase() + str.slice(1)
 
-const OrdersTab: React.FC<OrdersTabProps> = ({ status }) => {
-    // Определяем список вкладок в зависимости от статуса
+const OrdersTab: React.FC<OrdersTabProps> = ({ status, accessStatus = 'none' }) => {
+    if (!accessStatus || accessStatus === 'none') {
+        return <div className="flex flex-col items-center justify-center min-h-full text-center">
+            <h1 className="text-xl">
+                У вас нет доступа к этой странице
+            </h1>
+        </div> // ❌ ничего не рендерим
+    }
+
+    const getAccessTab = (): OrdersTypeT =>
+        accessStatus === 'pro' ? '4hours' : 'lastday'
+
+    const defaultTab = getAccessTab()
+
     const availableTabs: OrdersTypeT[] =
         status === 'curator'
-            ? ['all', '4hours', 'week', 'non-active', 'active']
-            : ['4hours', 'week'];
+            ? ['all', defaultTab, 'non-active', 'active']
+            : [defaultTab]
 
-    // Гарантируем, что availableTabs[0] существует, используя !
-    const [ordersType, setOrdersType] = React.useState<OrdersTypeT>(availableTabs[0]!);
+    const [ordersType, setOrdersType] = React.useState<OrdersTypeT>(defaultTab)
 
-    const handleClick = (type: OrdersTypeT) => {
-        setOrdersType(type);
-    };
+    const handleClick = (type: OrdersTypeT) => setOrdersType(type)
 
     const renderContent = () => {
         switch (ordersType) {
             case 'all':
-                return <AllOrders />;
+                return <AllOrders />
             case '4hours':
-                return <Last4hours />;
-            case 'week':
-                return <LastWeek />;
+                return <Last4hours />
+            case 'lastday':
+                return <LastDay />
             case 'non-active':
-                return <NonActiveOrders />;
+                return <NonActiveOrders />
             case 'active':
-                return <ActiveOrders isActiveEdit={false} onSelectedChange={() => {}} />;
+                return <ActiveOrders isActiveEdit={false} onSelectedChange={() => {}} />
             default:
-                return null;
+                return null
         }
-    };
-
+    }
 
     return (
         <ContentLayout
@@ -64,9 +72,9 @@ const OrdersTab: React.FC<OrdersTabProps> = ({ status }) => {
                             onClick={() => handleClick(tab)}
                         >
                             {tab === '4hours'
-                                ? "4 hours"
-                                : tab === 'week'
-                                    ? "Week"
+                                ? "4 Hours"
+                                : tab === 'lastday'
+                                    ? "24 Hours"
                                     : capitalize(tab)}
                         </Button>
                     ))}
@@ -80,7 +88,7 @@ const OrdersTab: React.FC<OrdersTabProps> = ({ status }) => {
         >
             {renderContent()}
         </ContentLayout>
-    );
-};
+    )
+}
 
-export default OrdersTab;
+export default OrdersTab

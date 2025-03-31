@@ -22,6 +22,11 @@ import { Textarea } from "@workspace/ui/components/textarea"
 import { format } from "date-fns"
 import { CalendarIcon } from "lucide-react"
 
+// Предположим, здесь хранится URL вида "http://127.0.0.1:8000/api"
+import { API } from "@shared/constants/constants"
+import axios from "axios";
+
+// Схема валидации
 const FormSchema = z.object({
     number: z.string().min(10, { message: "Введите корректный номер телефона." }),
     name: z.string().min(2, { message: "Имя должно содержать не менее 2 символов." }),
@@ -31,6 +36,8 @@ const FormSchema = z.object({
     equipmentType: z.string().min(1, { message: "Тип оборудования обязателен." }),
     price: z.coerce.number({ invalid_type_error: "Введите число" }).min(0, { message: "Цена должна быть положительной." }),
     promotions: z.string().min(1, { message: "Поле «Акции» обязательно для заполнения." }),
+    // Можно пока оставить (хотя отправляем в запросе статус "новый")
+    status: z.enum(["мастер", "оператор"], { required_error: "Выберите статус" }),
     deadline: z.date(),
 })
 
@@ -46,19 +53,61 @@ export function OrderFormComponent() {
             equipmentType: "",
             price: 0,
             promotions: "",
+            status: "мастер",
             deadline: new Date(),
         },
     })
 
-    function onSubmit(data: z.infer<typeof FormSchema>) {
-        console.log("success", data)
-        toast.success("Форма успешно отправлена!", {
-            description: (
-                <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-            ),
-        })
+    async function onSubmit(data: z.infer<typeof FormSchema>) {
+        // Подготовим данные, которые ждёт бэкенд
+        const payload = {
+            client_name: data.name,
+            client_phone: data.number,
+            tariff_plan: data.tariff,
+            address: data.address,
+            age: data.age,
+            equipment_type: data.equipmentType,
+            price: Number(data.price).toFixed(2),
+            promotion: data.promotions,
+            due_date: format(data.deadline, "yyyy-MM-dd"),
+            description: "", // или заведите отдельное поле, если нужно
+            status: "новый", // в примере у вас "новый"
+            operator: null,
+            curator: null,
+            assigned_master: null,
+            estimated_cost: (data.price * 0.9).toFixed(2), // пример вычисления
+            final_cost: Number(data.price).toFixed(2),
+            expenses: (data.price - data.price * 0.9).toFixed(2),
+        }
+
+        // На всякий случай выведем payload в консоль
+        console.log("Отправляем payload:", payload)
+
+        try {
+            // Получаем токен, например, из localStorage или другого источника
+            const token = localStorage.getItem("token");
+
+            // Отправляем запрос с axios:
+            const response = await axios.post(`${API}/orders/create/`, payload, {
+                headers: {
+                    "Content-Type": "application/json",
+                    // Передаём токен в заголовке Authorization
+                    Authorization: `Token ${token}`,
+                },
+            })
+
+            console.log("Успешный ответ сервера:", response.data)
+            toast.success("Форма успешно отправлена!", {
+                description: (
+                    <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+            <code className="text-white">{JSON.stringify(payload, null, 2)}</code>
+          </pre>
+                ),
+            })
+        } catch (error: any) {
+            console.error("Ошибка при отправке формы:", error.response ? error.response.data : error)
+            toast.error("Ошибка при отправке формы")
+        }
     }
 
     return (
@@ -182,7 +231,7 @@ export function OrderFormComponent() {
                     render={({ field }) => (
                         <FormItem>
                             <FormLabel>Срок исполнения</FormLabel>
-                            <br />
+                            <br/>
                             <Popover>
                                 <PopoverTrigger asChild>
                                     <Button variant="outline">
@@ -190,11 +239,14 @@ export function OrderFormComponent() {
                                         {field.value ? format(field.value, "PPP") : "Выберите дату"}
                                     </Button>
                                 </PopoverTrigger>
+
                                 <PopoverContent align="start">
+
                                     <Calendar mode="single" selected={field.value} onSelect={field.onChange} initialFocus />
                                 </PopoverContent>
                             </Popover>
                             <FormDescription>Выберите дату выполнения заказа.</FormDescription>
+
                             <FormMessage />
                         </FormItem>
                     )}

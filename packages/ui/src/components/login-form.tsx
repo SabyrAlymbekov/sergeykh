@@ -32,6 +32,10 @@ export function LoginForm({
           { email, password },
           { headers: { "Content-Type": "application/json" } }
       );
+      const token = data.token;
+
+      console.log("Получен токен:", token);
+      localStorage.setItem("token", token);
       console.log("Успешный логин", data);
       router.push("/profile");
     } catch (error) {

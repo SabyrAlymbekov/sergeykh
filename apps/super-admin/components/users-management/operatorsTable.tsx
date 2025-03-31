@@ -32,41 +32,42 @@ import {
     TableRow,
 } from "@workspace/ui/components/table";
 
-import { operatorsData } from "@shared/constants/masterMangementConstants";
+interface Operator {
+    id: string;
+    email: string;
+    role: string;
+}
 
-// Определяем колонки таблицы для операторов
-const columns = [
-    {
-        accessorKey: "id",
-        header: "ID",
-    },
-    {
-        accessorKey: "name",
-        header: "Name",
-    },
-    {
-        accessorKey: "balance",
-        header: "Balance",
-        cell: (info: any) => info.getValue(),
-    },
-    {
-        accessorKey: "called",
-        header: "Calls Count",
-        // Если поле "called" является массивом, выводим его длину
-        cell: (info: any) => {
-            const calls = info.getValue();
-            return Array.isArray(calls) ? calls.length : 0;
-        },
-    },
-];
+interface OperatorsTableProps {
+    operatorsData: Operator[];
+}
 
-const OperatorsTable = () => {
+const OperatorsTable: React.FC<OperatorsTableProps> = ({ operatorsData }) => {
     const router = useRouter();
     const [sorting, setSorting] = React.useState<SortingState>([]);
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
     const [searchInput, setSearchInput] = React.useState<string>("");
-    const [selectedSearchColumn, setSelectedSearchColumn] = React.useState<string>("name");
-    const [selectedSortLabel, setSelectedSortLabel] = React.useState("Сортировка");
+    const [selectedSearchColumn, setSelectedSearchColumn] = React.useState<string>("email");
+    const [selectedSortLabel, setSelectedSortLabel] = React.useState("Sort");
+
+    // Определяем столбцы: ID, Email и Role
+    const columns = React.useMemo(
+        () => [
+            {
+                accessorKey: "id",
+                header: "ID",
+            },
+            {
+                accessorKey: "email",
+                header: "Email",
+            },
+            {
+                accessorKey: "role",
+                header: "Role",
+            },
+        ],
+        []
+    );
 
     const table = useReactTable({
         data: operatorsData,
@@ -78,33 +79,26 @@ const OperatorsTable = () => {
         getSortedRowModel: getSortedRowModel(),
         getFilteredRowModel: getFilteredRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
-        initialState: {
-            pagination: { pageSize: 5 },
-        },
+        initialState: { pagination: { pageSize: 5 } },
     });
 
-    // Обработчик сортировки
     const handleSortChange = (columnId: string, desc: boolean, label: string) => {
         setSorting([{ id: columnId, desc }]);
         setSelectedSortLabel(label);
     };
 
-    // Опции для поиска
     const searchOptions = [
         { id: "id", label: "ID" },
-        { id: "name", label: "Name" },
-        { id: "balance", label: "Balance" },
-        { id: "called", label: "Calls Count" },
+        { id: "email", label: "Email" },
+        { id: "role", label: "Role" },
     ];
 
-    // Обновление фильтра при изменении поискового запроса
     const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
         setSearchInput(value);
         setColumnFilters([{ id: selectedSearchColumn, value }]);
     };
 
-    // При выборе новой колонки для поиска очищаем фильтр
     const handleSearchColumnChange = (columnId: string) => {
         setSelectedSearchColumn(columnId);
         setSearchInput("");
@@ -113,13 +107,13 @@ const OperatorsTable = () => {
 
     return (
         <div className="w-full">
-            {/* Верхняя панель: поиск, управление столбцами и сортировкой */}
+            {/* Верхняя панель: поиск и управление столбцами/сортировкой */}
             <div className="flex items-center justify-between py-4">
                 <div className="flex items-center space-x-2">
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <Button variant="outline">
-                                Искать по:{" "}
+                                Search by:{" "}
                                 {searchOptions.find((opt) => opt.id === selectedSearchColumn)?.label}{" "}
                                 <ChevronDown />
                             </Button>
@@ -136,7 +130,7 @@ const OperatorsTable = () => {
                         </DropdownMenuContent>
                     </DropdownMenu>
                     <Input
-                        placeholder={`Введите запрос для ${
+                        placeholder={`Enter query for ${
                             searchOptions.find((opt) => opt.id === selectedSearchColumn)?.label
                         }`}
                         value={searchInput}
@@ -145,11 +139,10 @@ const OperatorsTable = () => {
                     />
                 </div>
                 <div className="flex space-x-2">
-                    {/* Dropdown для управления видимостью столбцов */}
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <Button variant="outline">
-                                Столбцы <ChevronDown />
+                                Columns <ChevronDown />
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
@@ -165,7 +158,6 @@ const OperatorsTable = () => {
                             ))}
                         </DropdownMenuContent>
                     </DropdownMenu>
-                    {/* Dropdown для сортировки */}
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <Button variant="outline">
@@ -173,31 +165,31 @@ const OperatorsTable = () => {
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                            <DropdownMenuItem onClick={() => handleSortChange("name", false, "Name A-Z")}>
-                                Name A-Z
+                            <DropdownMenuItem onClick={() => handleSortChange("id", false, "ID A-Z")}>
+                                ID A-Z
                             </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => handleSortChange("name", true, "Name Z-A")}>
-                                Name Z-A
+                            <DropdownMenuItem onClick={() => handleSortChange("id", true, "ID Z-A")}>
+                                ID Z-A
                             </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => handleSortChange("balance", false, "Balance ↑")}>
-                                Balance ↑
+                            <DropdownMenuItem onClick={() => handleSortChange("email", false, "Email A-Z")}>
+                                Email A-Z
                             </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => handleSortChange("balance", true, "Balance ↓")}>
-                                Balance ↓
+                            <DropdownMenuItem onClick={() => handleSortChange("email", true, "Email Z-A")}>
+                                Email Z-A
                             </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => handleSortChange("called", false, "Calls ↑")}>
-                                Calls ↑
+                            <DropdownMenuItem onClick={() => handleSortChange("role", false, "Role A-Z")}>
+                                Role A-Z
                             </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => handleSortChange("called", true, "Calls ↓")}>
-                                Calls ↓
+                            <DropdownMenuItem onClick={() => handleSortChange("role", true, "Role Z-A")}>
+                                Role Z-A
                             </DropdownMenuItem>
                             <DropdownMenuItem
                                 onClick={() => {
                                     setSorting([]);
-                                    setSelectedSortLabel("Сортировка");
+                                    setSelectedSortLabel("Sort");
                                 }}
                             >
-                                Сбросить сортировку
+                                Reset Sort
                             </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
@@ -239,7 +231,7 @@ const OperatorsTable = () => {
                             ) : (
                                 <TableRow>
                                     <TableCell colSpan={columns.length} className="h-24 text-center">
-                                        Нет операторов.
+                                        No operators.
                                     </TableCell>
                                 </TableRow>
                             )}
@@ -256,10 +248,10 @@ const OperatorsTable = () => {
                     onClick={() => table.previousPage()}
                     disabled={!table.getCanPreviousPage()}
                 >
-                    Предыдущий
+                    Previous
                 </Button>
                 <span className="text-sm text-muted-foreground">
-          Страница {table.getState().pagination.pageIndex + 1} из {table.getPageCount()}
+          Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
         </span>
                 <Button
                     variant="outline"
@@ -267,7 +259,7 @@ const OperatorsTable = () => {
                     onClick={() => table.nextPage()}
                     disabled={!table.getCanNextPage()}
                 >
-                    Следующий
+                    Next
                 </Button>
             </div>
         </div>

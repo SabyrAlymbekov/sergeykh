@@ -1,12 +1,13 @@
-"use client"
+"use client";
 
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { useState } from "react"
-import { z } from "zod"
-import { toast } from "sonner"
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { useState } from "react";
+import { z } from "zod";
+import { toast } from "sonner";
+import axios from "axios";
 
-import { Button } from "@workspace/ui/components/button"
+import { Button } from "@workspace/ui/components/button";
 import {
     Form,
     FormControl,
@@ -14,150 +15,143 @@ import {
     FormItem,
     FormLabel,
     FormMessage,
-} from "@workspace/ui/components/form"
-import { Input } from "@workspace/ui/components/input"
+} from "@workspace/ui/components/form";
+import { Input } from "@workspace/ui/components/input";
 import {
     Select,
     SelectContent,
     SelectItem,
     SelectTrigger,
     SelectValue,
-} from "@workspace/ui/components/select"
+} from "@workspace/ui/components/select";
+import { API } from "@shared/constants/constants";
 
+// Updated validation schema: email, password, and role (master, operator, curator)
 const AccountSchema = z.object({
-    firstName: z.string().min(1, { message: "Введите имя." }),
-    lastName: z.string().min(1, { message: "Введите фамилию." }),
-    login: z.string().min(1, { message: "Введите логин." }),
-    password: z.string().min(6, { message: "Пароль должен содержать минимум 6 символов." }),
-    status: z.enum(["мастер", "оператор"], { required_error: "Выберите статус." }),
-})
+    email: z
+        .string()
+        .min(1, { message: "Enter email." })
+        .email({ message: "Invalid email." }),
+    password: z.string().min(6, { message: "Password must be at least 6 characters." }),
+    role: z.enum(["master", "operator", "curator"], { required_error: "Select a role." }),
+});
 
 export function AccountFormComponent() {
     const form = useForm<z.infer<typeof AccountSchema>>({
         resolver: zodResolver(AccountSchema),
         defaultValues: {
-            firstName: "",
-            lastName: "",
-            login: "",
+            email: "",
             password: "",
-            status: "мастер",
+            role: "master",
         },
-    })
+    });
 
-    const [showPassword, setShowPassword] = useState(false)
+    const [showPassword, setShowPassword] = useState(false);
 
-    // Функция генерации случайного пароля из 16 символов
+    // Function to generate a random password with 16 characters
     const generateRandomPassword = () => {
-        const length = 16
-        const charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()"
-        let result = ""
+        const length = 16;
+        const charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()";
+        let result = "";
         for (let i = 0; i < length; i++) {
-            result += charset.charAt(Math.floor(Math.random() * charset.length))
+            result += charset.charAt(Math.floor(Math.random() * charset.length));
         }
-        return result
-    }
+        return result;
+    };
 
     const handleGeneratePassword = () => {
-        form.setValue("password", generateRandomPassword())
-    }
+        form.setValue("password", generateRandomPassword());
+    };
 
-    const onSubmit = (data: z.infer<typeof AccountSchema>) => {
-        console.log("Account created:", data)
-        toast.success("Аккаунт успешно создан!", {
-            description: (
-                <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-            ),
-        })
-    }
+    const onSubmit = async (data: z.infer<typeof AccountSchema>) => {
+        const token = localStorage.getItem("token");
+        try {
+            const response = await axios.post(
+                `${API}/api/create-user/`,
+                data,
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Token ${token}`,
+                    },
+                }
+            );
+            console.log("Account created successfully:", response.data);
+            toast.success("Account created successfully!", {
+                description: (
+                    <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+            <code className="text-white">{JSON.stringify(response.data, null, 2)}</code>
+          </pre>
+                ),
+            });
+        } catch (error: any) {
+            console.error("Error creating account:", error);
+            toast.error("Error creating account: " + (error.response?.data?.error || error.message));
+        }
+    };
 
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-6">
-                {/* Имя */}
+            <form onSubmit={form.handleSubmit(onSubmit)} className="w-full sm:w-2/3 space-y-6">
+                {/* Email */}
                 <FormField
                     control={form.control}
-                    name="firstName"
+                    name="email"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Имя</FormLabel>
+                            <FormLabel>Email</FormLabel>
                             <FormControl>
-                                <Input placeholder="Введите имя" {...field} />
+                                <Input className="w-full" placeholder="Enter email" {...field} />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
                     )}
                 />
-                {/* Фамилия */}
-                <FormField
-                    control={form.control}
-                    name="lastName"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Фамилия</FormLabel>
-                            <FormControl>
-                                <Input placeholder="Введите фамилию" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-                {/* Логин */}
-                <FormField
-                    control={form.control}
-                    name="login"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Логин</FormLabel>
-                            <FormControl>
-                                <Input placeholder="Введите логин" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-                {/* Пароль */}
+                {/* Password with adaptive layout */}
                 <FormField
                     control={form.control}
                     name="password"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Пароль</FormLabel>
-                            <div className="flex items-center gap-2">
-                                <FormControl>
+                            <FormLabel>Password</FormLabel>
+                            <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+                                <FormControl className="flex-1">
                                     <Input
+                                        className="w-full"
                                         type={showPassword ? "text" : "password"}
-                                        placeholder="Введите пароль"
+                                        placeholder="Enter password"
                                         {...field}
                                     />
                                 </FormControl>
-                                <Button type="button" onClick={() => setShowPassword(!showPassword)}>
-                                    {showPassword ? "Скрыть" : "Показать"}
-                                </Button>
-                                <Button type="button" onClick={handleGeneratePassword}>
-                                    Сгенерировать
-                                </Button>
+                                <div className="flex flex-col sm:flex-row gap-2">
+                                    <Button type="button" onClick={() => setShowPassword(!showPassword)}>
+                                        {showPassword ? "Hide" : "Show"}
+                                    </Button>
+                                    <Button type="button" onClick={handleGeneratePassword}>
+                                        Generate
+                                    </Button>
+                                </div>
                             </div>
                             <FormMessage />
                         </FormItem>
                     )}
                 />
-                {/* Статус */}
+                {/* Role */}
                 <FormField
                     control={form.control}
-                    name="status"
+                    name="role"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Статус</FormLabel>
+                            <FormLabel>Role</FormLabel>
                             <FormControl>
                                 <Select onValueChange={field.onChange} value={field.value}>
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Выберите статус" />
+                                    <SelectTrigger className="w-full">
+                                        <SelectValue placeholder="Select role" />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        <SelectItem value="мастер">Мастер</SelectItem>
-                                        <SelectItem value="оператор">Оператор</SelectItem>
+                                        <SelectItem value="master">Master</SelectItem>
+                                        <SelectItem value="operator">Operator</SelectItem>
+                                        <SelectItem value="curator">Curator</SelectItem>
                                     </SelectContent>
                                 </Select>
                             </FormControl>
@@ -165,8 +159,8 @@ export function AccountFormComponent() {
                         </FormItem>
                     )}
                 />
-                <Button type="submit">Создать аккаунт</Button>
+                <Button type="submit">Create Account</Button>
             </form>
         </Form>
-    )
+    );
 }

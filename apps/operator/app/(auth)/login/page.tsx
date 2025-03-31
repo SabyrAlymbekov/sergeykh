@@ -1,14 +1,16 @@
-import { LoginForm } from '@/components/auth/login'
-import React from 'react'
+"use client";
 
-const LoginPage = () => {
-  return (
-    <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
-      <div className="w-full max-w-sm">
-        <LoginForm />
-      </div>
-    </div>
-  )
-}
+import React from 'react';
+import LoginPage from "@shared/authentification/login/LoginPage";
 
-export default LoginPage
+const Page = () => {
+
+
+    return (
+        <div className="">
+            <LoginPage/>
+        </div>
+    );
+};
+
+export default Page;
