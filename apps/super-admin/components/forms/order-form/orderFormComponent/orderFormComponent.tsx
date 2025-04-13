@@ -25,12 +25,13 @@ import { CalendarIcon } from "lucide-react"
 // Предположим, здесь хранится URL вида "http://127.0.0.1:8000/api"
 import { API } from "@shared/constants/constants"
 import axios from "axios";
+import React from "react";
 
 // Схема валидации
 const FormSchema = z.object({
     number: z.string().min(10, { message: "Введите корректный номер телефона." }),
     name: z.string().min(2, { message: "Имя должно содержать не менее 2 символов." }),
-    tariff: z.string().min(1, { message: "Тарифный план обязателен." }),
+    description: z.string().min(1, { message: "Описание обязательно для заполнения." }), // Добавлено поле description
     address: z.string().min(5, { message: "Адрес должен содержать не менее 5 символов." }),
     age: z.coerce.number({ invalid_type_error: "Введите число" }).min(0, { message: "Возраст должен быть положительным числом." }),
     equipmentType: z.string().min(1, { message: "Тип оборудования обязателен." }),
@@ -47,7 +48,7 @@ export function OrderFormComponent() {
         defaultValues: {
             number: "",
             name: "",
-            tariff: "",
+            description: "",
             address: "",
             age: 0,
             equipmentType: "",
@@ -63,14 +64,13 @@ export function OrderFormComponent() {
         const payload = {
             client_name: data.name,
             client_phone: data.number,
-            tariff_plan: data.tariff,
             address: data.address,
             age: data.age,
             equipment_type: data.equipmentType,
             price: Number(data.price).toFixed(2),
             promotion: data.promotions,
             due_date: format(data.deadline, "yyyy-MM-dd"),
-            description: "", // или заведите отдельное поле, если нужно
+            description: data.description, // или заведите отдельное поле, если нужно
             status: "новый", // в примере у вас "новый"
             operator: null,
             curator: null,
@@ -143,12 +143,12 @@ export function OrderFormComponent() {
                 />
                 <FormField
                     control={form.control}
-                    name="tariff"
+                    name="description"
                     render={({ field }) => (
                         <FormItem>
                             <FormLabel>Тарифный план</FormLabel>
                             <FormControl>
-                                <Textarea placeholder="Опишите ваш тарифный план..." {...field} />
+                                <Textarea placeholder="Опишите..." {...field} />
                             </FormControl>
                             <FormDescription>Укажите детали вашего тарифного плана.</FormDescription>
                             <FormMessage />

@@ -6,7 +6,7 @@ export async function POST(request: Request) {
     const { email, password } = await request.json();
     try {
         const response = await axios.post(
-            `${API}/api/login/`,
+            `${API}/login/`,
             { email, password },
             { headers: { "Content-Type": "application/json" } }
         );

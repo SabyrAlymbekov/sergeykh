@@ -67,7 +67,7 @@ export function AccountFormComponent() {
         const token = localStorage.getItem("token");
         try {
             const response = await axios.post(
-                `${API}/api/create-user/`,
+                `${API}/api/users/create/`,
                 data,
                 {
                     headers: {
