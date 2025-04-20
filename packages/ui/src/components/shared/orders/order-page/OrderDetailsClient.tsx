@@ -75,7 +75,6 @@ export default function OrderDetailsClient({ id }: Props) {
   const handleAssignSubmit = async () => {
     if (!order) return;
     const token = localStorage.getItem("token");
-    // Парсим ID мастера из поля ввода
     const masterIdNum = parseInt(newMasterId, 10);
     if (isNaN(masterIdNum)) {
       console.warn("Некорректный ID мастера");
@@ -83,24 +82,28 @@ export default function OrderDetailsClient({ id }: Props) {
     }
 
     try {
-      // ВНИМАНИЕ: новый URL с двумя параметрами в пути
-      const res = await fetch(
-        `${API}/assign/${order.id}/${masterIdNum}/`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Token ${token}`,
-          },
-        }
-      );
-      if (!res.ok) throw new Error("Не удалось назначить мастера");
+      const res = await fetch(`${API}/assign/${order.id}/`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Token ${token}`,
+        },
+        body: JSON.stringify({ assigned_master: masterIdNum }),
+      });
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => null);
+        console.error("Ошибка при назначении мастера:", err || res.statusText);
+        throw new Error("Не удалось назначить мастера");
+      }
+
       const updated = (await res.json()) as Order;
       setOrder(updated);
       setIsAssignOpen(false);
       setNewMasterId("");
     } catch (e) {
       console.error(e);
+      // можно показать пользователю уведомление об ошибке
     }
   };
 
