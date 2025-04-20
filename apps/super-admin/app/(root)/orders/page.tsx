@@ -8,7 +8,7 @@ const Orders = () => {
     <div>
       {/*<NewOrders></NewOrders>*/}
       {/*  <ActiveOrders/>*/}
-        <OrdersTab status={'curator'}></OrdersTab>
+        <OrdersTab status={'curator'} accessStatus={'pro'}></OrdersTab>
     </div>
   )
 }

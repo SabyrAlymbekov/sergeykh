@@ -1,40 +1,46 @@
+"use client";
+
 import { notFound } from "next/navigation";
 import * as React from "react";
+import type { Order } from "@shared/constants/orders";
+import { ActionsMenu } from "@workspace/ui/components/shared/constants/actionMenu";
 
-import { ordersData } from "@workspace/ui/components/shared/constants/orders";
-
-// 🔹 Функция маскировки номера телефона
 const maskPhoneNumber = (phone: string) => {
-    const parts = phone.split(' ');
-    return `${parts[0]} ${parts[1]?.replace(/./g, '*')} ${parts[2]?.replace(/./g, '*')} ${parts[3]?.slice(-2)}`;
+  const digits = phone.replace(/\D/g, '');
+  if (digits.length < 5) return phone;
+  const start = digits.slice(0, 3);
+  const end = digits.slice(-2);
+  const masked = '*'.repeat(digits.length - 5);
+  return `${start}${masked}${end}`;
 };
 
-// 🔹 Страница деталей заказа
-export default function OrderDetails({ id }: { id: string }) {
-    const order = ordersData.find((order) => order.id === id);
+export default function OrderDetails({ order }: { order: Order }) {
+  if (!order) return notFound();
 
-    if (!order) return notFound();
+  const info: { label: string; value: React.ReactNode }[] = [
+    { label: 'Номер заказа', value: order.id },
+    { label: 'Дата создания', value: new Date(order.created_at).toLocaleString() },
+    { label: 'Клиент', value: order.client_name },
+    { label: 'Контакт', value: maskPhoneNumber(order.client_phone) },
+    { label: 'Адрес', value: order.address },
+    { label: 'Описание', value: order.description },
+    { label: 'Итоговая стоимость', value: `${order.final_cost} ₸` },
+    { label: 'Мастер', value: order.assigned_master ?? 'Не назначен' },
+    { label: 'Статус', value: order.status },
+  ];
 
-    // Получаем компонент из order.actions и инстанцируем его
-    const ActionsComponent = order.actions;
-
-    return (
-        <div className="max-w-2xl mx-auto p-6 shadow-md rounded-md">
-            <h1 className="text-2xl font-bold mb-4">Заказ #{order.orderNumber}</h1>
-            <div className="space-y-2">
-                <p><strong>Дата заказа:</strong> {order.date}</p>
-                <p><strong>Клиент:</strong> {order.client}</p>
-                <p><strong>Контакт:</strong> {maskPhoneNumber(order.contact)}</p>
-                <p><strong>Адрес:</strong> {order.address}</p>
-                <p><strong>Проблема:</strong> {order.problem}</p>
-                <p><strong>Стоимость:</strong> {order.cost}</p>
-                <p><strong>Время выполнения:</strong> {order.executionTime}</p>
-                <p><strong>Мастер:</strong> {order.master}</p>
-                <p><strong>Статус:</strong> {order.status}</p>
-            </div>
-            <div className="mt-4">
-                <ActionsComponent />
-            </div>
-        </div>
-    );
+  return (
+    <div>
+      <h1>Детали заказа #{order.id}</h1>
+      <dl>
+        {info.map(({ label, value }) => (
+          <React.Fragment key={label}>
+            <dt><strong>{label}:</strong></dt>
+            <dd>{value}</dd>
+          </React.Fragment>
+        ))}
+      </dl>
+      <ActionsMenu order={order} />
+    </div>
+  );
 }

@@ -14,6 +14,7 @@ import { Label } from "@workspace/ui/components/label";
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import {API} from "@shared/constants/constants";
 
 export function LoginForm({
                             className,
@@ -28,15 +29,26 @@ export function LoginForm({
 
     try {
       const { data } = await axios.post(
-          "/api/login",
-          { email, password },
-          { headers: { "Content-Type": "application/json" } }
+        "/api/login",
+        { email, password },
+        { headers: { "Content-Type": "application/json" } }
       );
-      const token = data.token;
 
-      console.log("Получен токен:", token);
+      const token = data.token;
       localStorage.setItem("token", token);
-      console.log("Успешный логин", data);
+      console.log("Токен сохранён:", token);
+
+      // Получаем пользователя по токену
+      const userRes = await axios.get(`${API}/api/user/`, {
+        headers: {
+          Authorization: `Token ${token}`, // если у тебя Bearer — меняй на Bearer ${token}
+        },
+      });
+
+      const userId = userRes.data.id;
+      localStorage.setItem("user_id", String(userId));
+      console.log("ID пользователя сохранён:", userId);
+
       router.push("/profile");
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
@@ -46,6 +58,7 @@ export function LoginForm({
       }
     }
   };
+
 
   return (
       <div className={cn("flex flex-col gap-6", className)} {...props}>

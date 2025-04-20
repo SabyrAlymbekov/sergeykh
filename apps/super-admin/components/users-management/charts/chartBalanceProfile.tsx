@@ -41,7 +41,7 @@ const chartConfig = {
     },
 } satisfies ChartConfig
 
-export function ChartMasterProfile() {
+export function ChartBalanceProfile() {
     return (
         <Card>
             <CardHeader>

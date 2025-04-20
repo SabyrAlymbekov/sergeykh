@@ -1,5 +1,4 @@
-import React from 'react'
-import FinancesPage from "@/components/finances/financesPage";
+import FinancesPage from "@shared/finances/financesPage";
 
 const Finances = () => {
   return (

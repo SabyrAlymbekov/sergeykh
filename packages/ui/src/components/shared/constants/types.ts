@@ -4,7 +4,7 @@ export type Master = {
     id: string;
     name: string;
     balance: number;
-    orders: Order[];
+    // orders: Order[];
 };
 
 export type Curator = {

@@ -3,7 +3,7 @@ import { mastersData } from "@shared/constants/masterMangementConstants";
 import { Master } from "@shared/constants/types";
 import { OrdersDataTable } from "@shared/orders/(beta-orders)/OrdersTable";
 import { columns } from "@shared/constants/orders";
-import { ChartMasterProfile } from "@/components/users-management/master-profile/charts/chartMasterProfile";
+// import { ChartMasterProfile } from "@/components/users-management/master-profile/charts/chartBalanceProfile";
 import { HistoryPayments } from "@/components/finances/chartFinances/historyPayments";
 import { Button } from "@workspace/ui/components/button";
 import { Input } from "@workspace/ui/components/input";
@@ -138,10 +138,10 @@ const MasterProfile = ({ id }: { id: string }) => {
                 <div className="rounded-xl border px-5 flex-col justify-center items-center py-7">
                     <HistoryPayments />
                 </div>
-                <ChartMasterProfile />
+                {/*<ChartMasterProfile />*/}
             </div>
 
-            <OrdersDataTable data={master.orders} columns={columns} status="curator" />
+            {/*<OrdersDataTable data={master.orders} columns={columns} status="curator" />*/}
 
             {/* Delete Account Confirmation Dialog */}
             <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
