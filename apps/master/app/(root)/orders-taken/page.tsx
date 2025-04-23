@@ -1,5 +1,5 @@
 import React from 'react';
-import OrdersTakenPage from "@/components/orders-taken/ordersTakenPage";
+import OrdersTakenPage from "@shared/orders/orders-taken/ordersTakenPage";
 
 const Page = () => {
   return (

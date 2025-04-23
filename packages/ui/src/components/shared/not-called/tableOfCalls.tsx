@@ -1,7 +1,8 @@
 "use client"
 
 import * as React from "react"
-import {Button} from "@workspace/ui/components/button"
+import axios from "axios"
+import { Button } from "@workspace/ui/components/button"
 import {
   ColumnDef,
   SortingState,
@@ -27,61 +28,86 @@ import {
   AccordionTrigger,
   AccordionContent,
 } from "@workspace/ui/components/accordion"
-import {ArrowDown, ArrowUp} from "lucide-react";
-import {Contact} from "@shared/constants/types";
-
-// Определение типа контакта
-
-
-// Пример начальных данных (при необходимости замените на реальные данные)
-const initialData: Contact[] = Array.from({ length: 50 }, (_, i) => ({
-  id: (i + 1).toString(),
-  name: `User ${i + 1}`,
-  number: `+1 555-000-${i + 1}`,
-  date: new Date(2023, (i % 12), ((i % 28) + 1)).toISOString(),
-}))
+import { ArrowDown, ArrowUp } from "lucide-react"
+import { Contact } from "@shared/constants/types"
+import { API } from "@shared/constants/constants"
+import {api} from "@shared/utils/api";
 
 export function TableOfCalls() {
-  // Объявляем все состояния локально внутри компонента
-  const [data, setData] = React.useState<Contact[]>(initialData)
+  // JWT токен из localStorage (или любого хранилища)
+  const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null
+
+  // Настройка axios-инстанса с базовым URL и заголовком авторизации
+  // Состояния для непрозвоненных и прозвоненных контактов
+  const [data, setData] = React.useState<Contact[]>([])
   const [calledContacts, setCalledContacts] = React.useState<Contact[]>([])
-  // Явно задаём тип состояния сортировки как SortingState
   const [sorting, setSorting] = React.useState<SortingState>([])
-  // Если потребуется, можно также явно задать тип для columnVisibility:
   const [columnVisibility, setColumnVisibility] = React.useState({})
 
+  // Функция загрузки списков с сервера
+  const fetchContacts = React.useCallback(async () => {
+    if (!token) {
+      console.error('Token not found, please log in')
+      return
+    }
 
-  const columnsTaken: ColumnDef<Contact>[] = [
+    try {
+      const [uncalledRes, calledRes] = await Promise.all([
+        api.get<Contact[]>('/contacts/uncalled/'),
+        api.get<Contact[]>('/contacts/called/'),
+      ])
+      setData(uncalledRes.data)
+      setCalledContacts(calledRes.data)
+    } catch (err) {
+      console.error('Ошибка загрузки контактов:', err)
+    }
+  }, [api, token])
+
+  // При первом рендере — загрузить данные
+  React.useEffect(() => {
+    fetchContacts()
+  }, [fetchContacts])
+
+  // Отметить контакт прозвоненным на сервере и обновить списки
+  const markAsCalled = async (id: string) => {
+    if (!token) {
+      console.error('Token not found, please log in')
+      return
+    }
+
+    try {
+      await api.post(`/contacts/${id}/mark_as_called/`)
+      await fetchContacts()
+    } catch (err) {
+      console.error('Не удалось отметить как прозвоненного:', err)
+    }
+  }
+
+  const columns: ColumnDef<Contact>[] = [
     {
-      accessorKey: "name",
-      header: "Name",
-      cell: ({ row }) => <div className="capitalize">{row.getValue("name")}</div>,
+      accessorKey: 'name',
+      header: 'Name',
+      cell: ({ row }) => <div className="capitalize">{row.getValue('name')}</div>,
     },
     {
-      accessorKey: "number",
-      header: "Number",
-      cell: ({ row }) => <div className="lowercase">{row.getValue("number")}</div>,
+      accessorKey: 'number',
+      header: 'Number',
+      cell: ({ row }) => <div className="lowercase">{row.getValue('number')}</div>,
     },
     {
-      accessorKey: "date",
+      accessorKey: 'date',
       header: ({ column }) => {
         const current = column.getIsSorted()
         return (
             <div
                 className="flex items-center cursor-pointer select-none w-32"
-                onClick={() => {
-                  if (current === "asc") {
-                    column.toggleSorting(true)
-                  } else {
-                    column.toggleSorting(false)
-                  }
-                }}
+                onClick={() => column.toggleSorting(current !== 'asc')}
             >
               <span className="flex-1">Date</span>
               <span className="ml-1 w-4 h-4 flex items-center justify-center">
-              {current === "asc" ? (
+              {current === 'asc' ? (
                   <ArrowUp className="h-4 w-4" />
-              ) : current === "desc" ? (
+              ) : current === 'desc' ? (
                   <ArrowDown className="h-4 w-4" />
               ) : (
                   <ArrowUp className="h-4 w-4 opacity-0" />
@@ -96,13 +122,13 @@ export function TableOfCalls() {
         return a > b ? 1 : a < b ? -1 : 0
       },
       cell: ({ row }) => {
-        const dateValue = row.getValue("date") as string
+        const dateValue = row.getValue('date') as string
         return <div>{new Date(dateValue).toLocaleDateString()}</div>
       },
     },
     {
-      id: "actions",
-      header: "Actions",
+      id: 'actions',
+      header: 'Actions',
       cell: ({ row }) => (
           <Button
               variant="outline"
@@ -115,69 +141,49 @@ export function TableOfCalls() {
     },
   ]
 
-
-
   const table = useReactTable({
     data,
-    columns: columnsTaken, // Используем стандартное свойство "columns"
+    columns,
+    state: { sorting, columnVisibility },
     onSortingChange: setSorting,
+    onColumnVisibilityChange: setColumnVisibility,
     getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
-    onColumnVisibilityChange: setColumnVisibility,
-    state: {
-      sorting,
-      columnVisibility,
-    },
+    getPaginationRowModel: getPaginationRowModel(),
   })
-
-  const markAsCalled = (id: string) => {
-    setData((prev) => {
-      const contact = prev.find((c) => c.id === id)
-      if (contact) {
-        setCalledContacts((prevCalled) => [
-          ...prevCalled.filter((c) => c.id !== contact.id),
-          contact,
-        ])
-      }
-      return prev.filter((contact) => contact.id !== id)
-    })
-  }
 
   return (
       <div className="w-full">
         <div className="flex flex-col gap-5">
+          {/* Фильтр имени */}
           <div className="flex items-center py-4">
             <Input
                 placeholder="Filter names..."
-                value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
-                onChange={(event) =>
-                    table.getColumn("name")?.setFilterValue(event.target.value)
-                }
+                value={(table.getColumn('name')?.getFilterValue() as string) ?? ''}
+                onChange={e => table.getColumn('name')?.setFilterValue(e.target.value)}
                 className="max-w-sm"
             />
           </div>
+
+          {/* Таблица непрозвоненных */}
           <div className="rounded-md border">
             <Table>
               <TableHeader>
-                {table.getHeaderGroups().map((headerGroup) => (
-                    <TableRow key={headerGroup.id}>
-                      {headerGroup.headers.map((header) => (
+                {table.getHeaderGroups().map(hg => (
+                    <TableRow key={hg.id}>
+                      {hg.headers.map(header => (
                           <TableHead key={header.id}>
-                            {flexRender(
-                                header.column.columnDef.header,
-                                header.getContext()
-                            )}
+                            {flexRender(header.column.columnDef.header, header.getContext())}
                           </TableHead>
                       ))}
                     </TableRow>
                 ))}
               </TableHeader>
               <TableBody>
-                {table.getRowModel().rows.map((row) => (
+                {table.getRowModel().rows.map(row => (
                     <TableRow key={row.id}>
-                      {row.getVisibleCells().map((cell) => (
+                      {row.getVisibleCells().map(cell => (
                           <TableCell key={cell.id}>
                             {flexRender(cell.column.columnDef.cell, cell.getContext())}
                           </TableCell>
@@ -187,6 +193,8 @@ export function TableOfCalls() {
               </TableBody>
             </Table>
           </div>
+
+          {/* Аккордеон прозвоненных */}
           <div className="rounded-md border px-4">
             <Accordion type="multiple">
               <AccordionItem value="called-contacts">
@@ -203,15 +211,13 @@ export function TableOfCalls() {
                         </TableRow>
                       </TableHeader>
                       <TableBody>
-                        {calledContacts.map((contact, index) => (
-                            <TableRow key={`${contact.id}-${index}`}>
+                        {calledContacts.map(contact => (
+                            <TableRow key={contact.id}>
                               <TableCell>{contact.name}</TableCell>
                               <TableCell>{contact.number}</TableCell>
-                              <TableCell>
-                                {new Date(contact.date).toLocaleDateString()}
-                              </TableCell>
-                              <TableCell className="flex items-center gap-2 text-green-600">
-                                {contact.status} Прозвонён
+                              <TableCell>{new Date(contact.date).toLocaleDateString()}</TableCell>
+                              <TableCell className="text-green-600">
+                                Прозвонён
                               </TableCell>
                             </TableRow>
                         ))}

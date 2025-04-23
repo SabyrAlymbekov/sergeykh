@@ -1,8 +1,8 @@
 "use client"
 
 import React from 'react';
-import {AccountFormComponent} from "@/components/forms/formsComponent/formComponent";
 import { FormProvider, useForm } from "react-hook-form";
+import {AccountFormComponent} from "@shared/forms/formsComponent/formComponent";
 
 const Page = () => {
     const methods = useForm();

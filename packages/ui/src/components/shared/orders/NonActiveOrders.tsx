@@ -39,8 +39,7 @@ export default function NonActiveOrders() {
         data={memoData}
         columns={memoCols}
         isEdit={false}
-        onSelectedChange={() => {}}
-      />
+        isModel={false}      />
     </div>
   );
 }

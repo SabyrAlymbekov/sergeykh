@@ -1,14 +1,12 @@
-// app/profile/page.tsx
 "use client";
 
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import {API} from "@shared/constants/constants";
+import { API } from "@shared/constants/constants";
 
 interface UserProfile {
     email: string;
     role: string;
-    // можно добавить и другие поля, если они возвращаются с сервера
 }
 
 export default function ProfilePage() {

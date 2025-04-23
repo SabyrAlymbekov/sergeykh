@@ -4,6 +4,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import { api } from "@shared/utils/api";          // наш инстанс
 import { OrdersDataTable } from "./(beta-orders)/OrdersTable";
 import { columns, Order } from "@shared/constants/orders";
+import {API} from "@shared/constants/constants";
 
 export default function AllOrders() {
   const [data, setData] = useState<Order[]>([]);
@@ -12,7 +13,7 @@ export default function AllOrders() {
 
   useEffect(() => {
     let mounted = true;
-    api.get<Order[]>("/api/orders/all/")          // обращаемся к api.baseURL + this path
+    api.get<Order[]>(`${API}/api/orders/all/`)          // обращаемся к api.baseURL + this path
       .then(res => mounted && setData(res.data))
       .catch(err => mounted && setError(err.response?.data?.detail || err.message))
       .finally(() => mounted && setLoading(false));
@@ -30,7 +31,13 @@ export default function AllOrders() {
 
   return (
     <div className="p-4">
-      <OrdersDataTable data={memoData} columns={memoCols} />
+      <OrdersDataTable
+          data={memoData}
+          columns={memoCols}
+          isEdit={false}
+          isModel={false}
+
+      />
     </div>
   );
 }

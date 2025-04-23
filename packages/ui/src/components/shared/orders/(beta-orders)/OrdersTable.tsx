@@ -1,35 +1,26 @@
+// ------------------------------------------
+// OrdersDataTable.tsx (с отображением ID заказа слева)
+// ------------------------------------------
 "use client";
 
-import * as React from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import axios from "axios";
+import { API } from "@shared/constants/constants";
 import {
-  SortingState,
-  VisibilityState,
+  useReactTable,
   getCoreRowModel,
   getFilteredRowModel,
-  getPaginationRowModel,
   getSortedRowModel,
+  getPaginationRowModel,
+  getGroupedRowModel,
+  SortingState,
+  VisibilityState,
   flexRender,
-  useReactTable,
 } from "@tanstack/react-table";
-import { ChevronDown, Minus, Plus, X } from "lucide-react"; // <-- Иконка X
+import { Checkbox } from "@workspace/ui/components/checkbox";
 import { Button } from "@workspace/ui/components/button";
 import { Input } from "@workspace/ui/components/input";
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from "@workspace/ui/components/dropdown-menu";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@workspace/ui/components/table";
-
 import {
   Dialog,
   DialogTrigger,
@@ -39,22 +30,23 @@ import {
   DialogFooter,
   DialogClose,
 } from "@workspace/ui/components/dialog";
-
-import { Checkbox } from "@workspace/ui/components/checkbox";
-
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@workspace/ui/components/table";
+import { Minus, Plus, ChevronDown, X } from "lucide-react";
 import { OrdersDataTableProps } from "@shared/constants/orders";
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "@workspace/ui/components/dropdown-menu";
 import ActiveOrders from "@shared/orders/ActiveOrders";
-
-/**
- * Расширенный интерфейс OrdersDataTableProps:
- * export interface OrdersDataTableProps {
- *   data: any[];
- *   columns: ColumnDef<any, any>[];
- *   status?: string;
- *   isEdit?: boolean;
- *   onSelectedChange?: (selected: any[]) => void;
- * }
- */
 
 export function OrdersDataTable({
                                   data,
@@ -62,10 +54,12 @@ export function OrdersDataTable({
                                   status,
                                   isEdit = false,
                                   onSelectedChange = () => {},
+                                  masterId,
+                                  isModel = true,
                                 }: OrdersDataTableProps) {
-  const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [globalFilter, setGlobalFilter] = React.useState<string>("");
-  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [globalFilter, setGlobalFilter] = useState("");
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
     orderNumber: false,
     date: true,
     client: true,
@@ -79,20 +73,39 @@ export function OrdersDataTable({
     actions: false,
   });
 
-  // Локально храним массив заказов, чтобы можно было «убирать» заказы
-  const [localData, setLocalData] = React.useState<any[]>(() => data);
-
-  // Режим удаления
-  const [isDeleteMode, setIsDeleteMode] = React.useState(false);
-
-  // Состояние для выбранных заказов (режим редактирования)
-  const [selectedOrders, setSelectedOrders] = React.useState<any[]>([]);
+  const [localData, setLocalData] = useState<any[]>(() =>
+      isModel ? [] : data
+  );
+  const [selectedOrders, setSelectedOrders] = useState<any[]>([]);
+  const [isDeleteMode, setIsDeleteMode] = useState(false);
+  const [isAssignOpen, setIsAssignOpen] = useState(false);
+  const [toAssign, setToAssign] = useState<any[]>([]);
 
   const router = useRouter();
+  const token = localStorage.getItem("token") || "";
+
+  const fetchAssignedOrders = async () => {
+    if (!masterId) return;
+    try {
+      const res = await axios.get<any[]>(`${API}/orders/master/${masterId}/`, {
+        headers: { Authorization: `Token ${token}` },
+      });
+      setLocalData(res.data);
+    } catch (err) {
+      console.error("Ошибка загрузки назначенных заказов:", err);
+    }
+  };
+
+  useEffect(() => {
+    if (isModel) {
+      fetchAssignedOrders();
+    }
+  }, [masterId, isAssignOpen]);
 
   const table = useReactTable({
-    data: localData, // <-- Используем локальный массив
+    data: localData,
     columns,
+    state: { sorting, globalFilter, columnVisibility },
     onSortingChange: setSorting,
     onGlobalFilterChange: setGlobalFilter,
     onColumnVisibilityChange: setColumnVisibility,
@@ -100,215 +113,163 @@ export function OrdersDataTable({
     getFilteredRowModel: getFilteredRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-    state: {
-      sorting,
-      globalFilter,
-      columnVisibility,
-    },
+    getGroupedRowModel: getGroupedRowModel(),
   });
 
-  // Обработчик переключения режима удаления
-  const toggleDeleteMode = () => {
-    setIsDeleteMode((prev) => !prev);
-  };
-
-  // Удалить заказ из localData
-  const handleRemoveOrder = (orderId: string) => {
-    setLocalData((prev) => prev.filter((o) => o.id !== orderId));
-  };
-
-  // Обработчик клика по строке (только если не режим редактирования и не режим удаления)
-  const handleRowClick = (id: string) => {
-    if (!isEdit && !isDeleteMode) {
-      router.push(`/orders/${id}`);
+  const handleRemoveOrder = async (orderId: string) => {
+    try {
+      await axios.patch(
+          `${API}/assign/${orderId}/remove/`,
+          {},
+          { headers: { Authorization: `Token ${token}` } }
+      );
+      if (isModel) fetchAssignedOrders();
+      else setLocalData(prev => prev.filter(o => o.id !== orderId));
+    } catch (err) {
+      console.error("Ошибка отмены назначения заказа:", err);
     }
   };
 
-  // Обработчик переключения чекбокса для режима редактирования
+  const handleAssign = async () => {
+    try {
+      await Promise.all(
+          toAssign.map(order =>
+              axios.patch(
+                  `${API}/assign/${order.id}/`,
+                  { assigned_master: masterId },
+                  { headers: { Authorization: `Token ${token}` } }
+              )
+          )
+      );
+      setToAssign([]);
+      setIsAssignOpen(false);
+    } catch (err) {
+      console.error("Ошибка назначения заказов:", err);
+    }
+  };
+
   const handleCheckboxChange = (order: any, checked: boolean) => {
-    setSelectedOrders((prev) => {
-      const updated = checked
-          ? [...prev, order]
-          : prev.filter((o) => o.id !== order.id);
-
-      console.log("Новые выбранные заказы (сразу после чекбокса):", updated);
-      onSelectedChange(updated);
-
-      return updated;
-    });
+    const updated = checked
+        ? [...selectedOrders, order]
+        : selectedOrders.filter(o => o.id !== order.id);
+    setSelectedOrders(updated);
+    onSelectedChange(updated);
   };
 
   return (
       <div className="w-full">
+        {/* Filters & actions */}
         <div className="flex items-center py-4">
           <Input
               placeholder="Найти заказы..."
-              value={globalFilter ?? ""}
-              onChange={(event) => setGlobalFilter(event.target.value)}
+              value={globalFilter}
+              onChange={e => setGlobalFilter(e.target.value)}
               className="max-w-sm"
           />
-
-          {status === "curator" && (
+          {status === "curator" && isModel && (
               <div className="flex gap-2 ml-4">
-                {/* Кнопка «-»: включает/выключает режим удаления */}
                 <Button
                     variant={isDeleteMode ? "destructive" : "outline"}
                     size="icon"
-                    onClick={toggleDeleteMode}
+                    onClick={() => setIsDeleteMode(p => !p)}
                 >
                   <Minus />
                 </Button>
-                <Dialog>
+                <Dialog open={isAssignOpen} onOpenChange={setIsAssignOpen}>
                   <DialogTrigger asChild>
-                    <Button variant="outline" size="icon">
-                      <Plus />
-                    </Button>
+                    <Button variant="outline" size="icon"><Plus/></Button>
                   </DialogTrigger>
                   <DialogContent className="w-full md:max-w-4xl max-h-[90vh] overflow-y-auto">
-                    <DialogHeader>
-                      <DialogTitle>Добавить заказ</DialogTitle>
-                    </DialogHeader>
-
+                    <DialogHeader><DialogTitle>Добавить заказ мастеру</DialogTitle></DialogHeader>
                     <div className="mt-4">
-                      {/* Здесь ActiveOrders */}
-                      <ActiveOrders
-                          isActiveEdit={true}
-                          onSelectedChange={onSelectedChange}
-                      />
+                      <ActiveOrders isActiveEdit onSelectedChange={setToAssign} masterId={masterId}/>
                     </div>
-
                     <DialogFooter>
-                      <DialogClose asChild>
-                        <Button variant="outline">Отмена</Button>
-                      </DialogClose>
-                      <Button>Добавить</Button>
+                      <DialogClose asChild><Button variant="outline">Отмена</Button></DialogClose>
+                      <Button onClick={handleAssign} disabled={!toAssign.length}>Добавить</Button>
                     </DialogFooter>
                   </DialogContent>
                 </Dialog>
               </div>
           )}
-
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="ml-auto">
-                Столбцы <ChevronDown />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              {table.getAllColumns().map((column) => (
-                  <DropdownMenuCheckboxItem
-                      key={column.id}
-                      className="capitalize"
-                      checked={column.getIsVisible()}
-                      onCheckedChange={(value) => column.toggleVisibility(!!value)}
-                  >
-                    {column.id}
-                  </DropdownMenuCheckboxItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <div className="ml-auto">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline">Столбцы <ChevronDown/></Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                {table.getAllColumns().map(col => (
+                    <DropdownMenuCheckboxItem
+                        key={col.id}
+                        checked={col.getIsVisible()}
+                        onCheckedChange={v => col.toggleVisibility(!!v)}
+                    >{col.id}</DropdownMenuCheckboxItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </div>
 
+        {/* Main table */}
         <div className="overflow-x-auto">
           <div className="min-w-[600px] rounded-md border">
             <Table>
               <TableHeader>
-                {table.getHeaderGroups().map((headerGroup) => (
-                    <TableRow key={headerGroup.id}>
+                {table.getHeaderGroups().map(hg => (
+                    <TableRow key={hg.id}>
+                      {/* ID column */}
+                      <TableHead className="w-12 text-center">ID</TableHead>
                       {isEdit && <TableHead className="w-10 text-center">#</TableHead>}
-                      {headerGroup.headers.map((header) => (
+                      {hg.headers.map(header => (
                           <TableHead key={header.id}>
-                            {header.isPlaceholder
-                                ? null
-                                : flexRender(header.column.columnDef.header, header.getContext())}
+                            {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
                           </TableHead>
                       ))}
-                      {/* Если включён режим удаления, добавим ещё один столбец под кнопку удаления */}
-                      {isDeleteMode && (
-                          <TableHead className="w-10 text-center">Удалить</TableHead>
-                      )}
+                      {isDeleteMode && <TableHead className="w-10 text-center">Удалить</TableHead>}
                     </TableRow>
                 ))}
               </TableHeader>
               <TableBody>
-                {table.getRowModel().rows?.length ? (
-                    table.getRowModel().rows.map((row) => {
-                      const rowOrder = row.original;
-                      return (
-                          <TableRow
-                              key={row.id}
-                              className={`cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 ${
-                                  (isEdit || isDeleteMode) ? "cursor-default" : ""
-                              }`}
-                              onClick={() => handleRowClick(rowOrder.id)}
-                          >
-                            {/* Режим редактирования (чекбоксы) */}
-                            {isEdit && (
-                                <TableCell className="text-center">
-                                  <Checkbox
-                                      checked={selectedOrders.some((o) => o.id === rowOrder.id)}
-                                      onCheckedChange={(checked) =>
-                                          handleCheckboxChange(rowOrder, !!checked)
-                                      }
-                                  />
-                                </TableCell>
-                            )}
-                            {row.getVisibleCells().map((cell) => (
-                                <TableCell key={cell.id}>
-                                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                </TableCell>
-                            ))}
-                            {/* Режим удаления (красная кнопка с крестиком) */}
-                            {isDeleteMode && (
-                                <TableCell className="text-center">
-                                  <Button
-                                      variant="destructive"
-                                      size="icon"
-                                      onClick={() => handleRemoveOrder(rowOrder.id)}
-                                  >
-                                    <X />
-                                  </Button>
-                                </TableCell>
-                            )}
-                          </TableRow>
-                      );
-                    })
-                ) : (
-                    <TableRow>
-                      <TableCell
-                          colSpan={
-                              columns.length +
-                              (isEdit ? 1 : 0) +
-                              (isDeleteMode ? 1 : 0)
-                          }
-                          className="h-24 text-center"
+                {table.getRowModel().rows.map(row => {
+                  const order = row.original;
+                  return (
+                      <TableRow
+                          key={row.id}
+                          className={`${isEdit||isDeleteMode?"cursor-default":"cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800"}`}
+                          onClick={() => !isEdit&&!isDeleteMode&&router.push(`/orders/${order.id}`)}
                       >
-                        Пусто.
-                      </TableCell>
-                    </TableRow>
-                )}
+                        {/* ID cell */}
+                        <TableCell className="text-center font-mono">{order.id}</TableCell>
+                        {isEdit && (
+                            <TableCell className="text-center">
+                              <Checkbox
+                                  checked={selectedOrders.some(o => o.id === order.id)}
+                                  onCheckedChange={c => handleCheckboxChange(order, !!c)}
+                              />
+                            </TableCell>
+                        )}
+                        {row.getVisibleCells().map(cell => (
+                            <TableCell key={cell.id}>
+                              {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                            </TableCell>
+                        ))}
+                        {isDeleteMode && (
+                            <TableCell className="text-center">
+                              <Button variant="destructive" size="icon" onClick={() => handleRemoveOrder(order.id)}><X/></Button>
+                            </TableCell>
+                        )}
+                      </TableRow>
+                  );
+                })}
               </TableBody>
             </Table>
           </div>
         </div>
 
+        {/* Pagination */}
         <div className="flex items-center justify-end space-x-2 py-4">
-          <Button
-              variant="outline"
-              size="sm"
-              onClick={() => table.previousPage()}
-              disabled={!table.getCanPreviousPage()}
-          >
-            Предыдущий
-          </Button>
-          <Button
-              variant="outline"
-              size="sm"
-              onClick={() => table.nextPage()}
-              disabled={!table.getCanNextPage()}
-          >
-            Следующий
-          </Button>
+          <Button variant="outline" size="sm" onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()}>Предыдущий</Button>
+          <Button variant="outline" size="sm" onClick={() => table.nextPage()} disabled={!table.getCanNextPage()}>Следующий</Button>
         </div>
       </div>
   );

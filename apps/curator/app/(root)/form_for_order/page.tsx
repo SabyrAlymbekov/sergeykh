@@ -1,5 +1,5 @@
 import React from 'react';
-import OrderForm from "@/components/forms/order-form/orderForm";
+import OrderForm from "@shared/forms/order-form/orderForm";
 
 const Page = () => {
   return (

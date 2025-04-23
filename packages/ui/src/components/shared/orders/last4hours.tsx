@@ -31,7 +31,7 @@ export default function Last4hours() {
         data={memoData}
         columns={memoCols}
         isEdit={false}
-        onSelectedChange={() => {}}
+        isModel={false}
       />
     );
 }

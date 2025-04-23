@@ -23,7 +23,7 @@ export enum ContentLayoutBg {
 
 
 
-export type Order = {
+export interface Order {
     id: number;
     client_name: string;
     client_phone: string;
@@ -36,13 +36,15 @@ export type Order = {
     final_cost: string;
     status: string;
     // + любые другие поля, которые приходят
-};
+}
 
 export interface OrdersDataTableProps {
     data: Order[];
     columns: ColumnDef<Order>[];
     status?: "curator";
     isEdit?: boolean;
+    masterId?: string | undefined;
+    isModel?: boolean;
     /**
      * Callback при выборе/отметке заказов в режиме редактирования.
      * Передаёт массив объектов Order, а не только их ID.

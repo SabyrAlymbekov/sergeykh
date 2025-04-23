@@ -4,7 +4,7 @@
 import * as React from "react";
 
 import { OrdersTakenDataTable } from "@/components/orders-taken/OrdersTakenTable";
-import {columns, ordersData} from "@workspace/ui/components/shared/constants/orders"; // Используем единый источник типа
+// import {columns, ordersData} from "@workspace/ui/components/shared/constants/orders"; // Используем единый источник типа
 
 
 
@@ -14,7 +14,7 @@ import {columns, ordersData} from "@workspace/ui/components/shared/constants/ord
 export default function OrdersTakenPage() {
   return (
       <div className="w-full">
-        <OrdersTakenDataTable data={ordersData} columns={columns} />
+        {/*<OrdersTakenDataTable data={ordersData} columns={columns} />*/}
 
       </div>
   );

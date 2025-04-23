@@ -11,6 +11,12 @@ importers:
       axios:
         specifier: ^1.8.4
         version: 1.8.4
+      sonner:
+        specifier: ^2.0.1
+        version: 2.0.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      sooner:
+        specifier: ^1.1.4
+        version: 1.1.4
     devDependencies:
       '@workspace/eslint-config':
         specifier: workspace:*
@@ -643,6 +649,9 @@ importers:
       recharts:
         specifier: ^2.15.1
         version: 2.15.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      sonner:
+        specifier: ^2.0.1
+        version: 2.0.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       sooner:
         specifier: ^1.1.4
         version: 1.1.4
