@@ -4,9 +4,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { API } from "@shared/constants/constants";
 import { Master as Operator } from "@shared/constants/types";
-import { ChartBalanceProfile } from "@/components/users-management/charts/chartBalanceProfile";
 import { HistoryPayments } from "@shared/finances/chartFinances/historyPayments";
-import CallsDataTable from "@/components/users-management/callsDataTable";
 import { Button } from "@workspace/ui/components/button";
 import { Input } from "@workspace/ui/components/input";
 import {
@@ -123,7 +121,7 @@ const OperatorProfile: React.FC<OperatorProfileProps> = ({ id }) => {
             <h1 className="text-xl text-center md:text-2xl font-bold">
                 Профиль оператора {operator.name}
             </h1>
-            <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-16 items-start">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
                 {/* Баланс и операции */}
                 <div className="flex flex-col items-center gap-5">
                     <h2 className="text-2xl text-gray-400">Баланс</h2>
@@ -190,7 +188,7 @@ const OperatorProfile: React.FC<OperatorProfileProps> = ({ id }) => {
                     <HistoryPayments userId={id} />
                 </div>
                 {/* График баланса */}
-                <ChartBalanceProfile />
+                {/*<ChartBalanceProfile />*/}
             </div>
             {/* История звонков */}
             {/*<CallsDataTable called={operator.called as CallLog[]} />*/}

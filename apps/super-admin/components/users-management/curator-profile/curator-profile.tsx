@@ -17,7 +17,6 @@ import { HistoryPayments } from "@shared/finances/chartFinances/historyPayments"
 import { Master } from "@shared/constants/types";
 import { API } from "@shared/constants/constants";
 import MastersTable from "@/components/users-management/mastersTable";
-import {ChartBalanceProfile} from "@/components/users-management/charts/chartBalanceProfile";
 
 interface CuratorProfileProps {
   id: string;
@@ -159,7 +158,7 @@ const CuratorProfile: React.FC<CuratorProfileProps> = ({ id }) => {
         Профиль куратора {curatorInfo.name}
       </h1>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 items-center gap-16">
+      <div className="grid grid-cols-1 lg:grid-cols-2 items-center gap-16">
         {/* Баланс и операции */}
         <div className="flex flex-col items-center gap-5">
           <h2 className="text-2xl text-gray-400">Баланс</h2>
@@ -231,7 +230,7 @@ const CuratorProfile: React.FC<CuratorProfileProps> = ({ id }) => {
         </div>
 
         {/* Редактирование имени */}
-        <ChartBalanceProfile/>
+        {/*<ChartBalanceProfile/>*/}
       </div>
 
       {/* Таблица мастеров */}

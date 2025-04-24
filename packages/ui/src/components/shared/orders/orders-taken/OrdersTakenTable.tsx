@@ -1,3 +1,4 @@
+
 "use client";
 
 import * as React from "react";
@@ -33,9 +34,11 @@ import {
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@workspace/ui/components/dialog";
 import { Textarea } from "@workspace/ui/components/textarea";
 import { Separator } from "@workspace/ui/components/separator";
-import { DatePicker } from "@/components/orders-taken/DatePicker";
-import { TimePickerComponent } from "@/components/orders-taken/TimePicker";
+
 import { Order } from "@workspace/ui/components/shared/constants/orders";
+import { TimePickerComponent } from "@shared/orders/orders-taken/TimePicker";
+import { DatePicker } from "@shared/orders/orders-taken/DatePicker";
+import { api } from "@shared/utils/api";
 
 export function OrdersTakenDataTable({ data, columns }: { data: Order[]; columns: ColumnDef<Order>[] }) {
   const router = useRouter();
@@ -50,19 +53,58 @@ export function OrdersTakenDataTable({ data, columns }: { data: Order[]; columns
   const [image, setImage] = React.useState<File | null>(null);
   const [arrivalDate, setArrivalDate] = React.useState<Date | undefined>(undefined);
   const [arrivalTime, setArrivalTime] = React.useState<string>("");
+  const [submitting, setSubmitting] = React.useState<boolean>(false);
+  const [error, setError] = React.useState<string | null>(null);
 
   const revenue: number = 100000;
   const expenses_order: number = 100;
   const clearRevenue: number = revenue - expenses_order;
 
-  const handleSubmit = () => {
-    if (selectedOrder) {
+  // Функция завершения заказа с отправкой на бэкенд
+  const handleSubmit = async () => {
+    if (!selectedOrder) return;
+    // Валидация всех полей
+    if (!image || !description || !expenses || !totalReceived || !arrivalDate || !arrivalTime) {
+      setError("Заполните все поля");
+      return;
+    }
+    setSubmitting(true);
+    try {
+      const formData = new FormData();
+      formData.append("report_file", image);
+      formData.append("work_description", description);
+      formData.append("expenses", expenses);
+      formData.append("final_cost", totalReceived);
+
+      // формат даты и времени: гарантируем string
+      const dateString: string | undefined = arrivalDate
+          ? arrivalDate.toISOString().split("T")[0]
+          : "";
+      formData.append("date", dateString ? dateString : "");
+      formData.append("time", arrivalTime);
+
+      // POST запрос
+      await api.post(
+          `/orders/${selectedOrder.id}/complete/`,
+          formData,
+          { headers: { "Content-Type": "multipart/form-data" } }
+      );
+
+      // Обновляем статус локально
       setOrders((prev) =>
           prev.map((order) =>
-              order.id === selectedOrder.id ? { ...order, status: "Ожидание" } : order
+              order.id === selectedOrder.id
+                  ? { ...order, status: "Ожидание" }
+                  : order
           )
       );
       setSelectedOrder(null);
+      setError(null);
+    } catch (e: any) {
+      console.error("Ошибка при завершении заказа:", e);
+      setError(e.response?.data?.error || "Сетевая ошибка");
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -115,7 +157,10 @@ export function OrdersTakenDataTable({ data, columns }: { data: Order[]; columns
                     {headerGroup.headers.map((header) =>
                         header.column.id !== "actions" ? (
                             <TableHead key={header.id}>
-                              {flexRender(header.column.columnDef.header, header.getContext())}
+                              {flexRender(
+                                  header.column.columnDef.header,
+                                  header.getContext()
+                              )}
                             </TableHead>
                         ) : null
                     )}
@@ -125,7 +170,6 @@ export function OrdersTakenDataTable({ data, columns }: { data: Order[]; columns
             </TableHeader>
             <TableBody>
               {table.getRowModel().rows.map((row) => (
-                  // При клике по строке переходим на /orders-taken/[id]
                   <TableRow
                       key={row.id}
                       onClick={() => router.push(`/orders-taken/${row.original.id}`)}
@@ -139,22 +183,21 @@ export function OrdersTakenDataTable({ data, columns }: { data: Order[]; columns
                         ) : null
                     )}
                     <TableCell onClick={(e) => e.stopPropagation()}>
-                      {row.original.status === "Завершено" ? (
+                      {row.original.status === "завершен" ? (
                           <span className="text-green-600 flex items-center">
-                      <CheckCircle className="w-4 h-4 mr-2" /> Завершено
+                      <CheckCircle className="w-4 h-4 mr-2" /> Завершен
                     </span>
-                      ) : row.original.status === "Ожидание" ? (
+                      ) : row.original.status === "проверяется" ? (
                           <span className="text-yellow-600 flex items-center">
-                      <Clock className="w-4 h-4 mr-2" /> Ожидание
+                      <Clock className="w-4 h-4 mr-2" /> Проверяется
                     </span>
                       ) : (
-                          // Кнопка для открытия диалоговой формы;
-                          // stopPropagation предотвращает срабатывание клика по строке
                           <Button
                               onClick={(e) => {
                                 e.stopPropagation();
                                 setSelectedOrder(row.original);
                               }}
+                              disabled={submitting}
                           >
                             Завершить
                           </Button>
@@ -192,7 +235,11 @@ export function OrdersTakenDataTable({ data, columns }: { data: Order[]; columns
                   <DialogTitle>Заполните форму завершения заказа</DialogTitle>
                 </DialogHeader>
                 <h2>Шаг 1</h2>
-                <Input type="file" accept="image/*" onChange={(e) => setImage(e.target.files?.[0] || null)} />
+                <Input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => setImage(e.target.files?.[0] || null)}
+                />
                 <Textarea
                     placeholder="Описание проделанной работы"
                     value={description}
@@ -208,13 +255,14 @@ export function OrdersTakenDataTable({ data, columns }: { data: Order[]; columns
                     value={totalReceived}
                     onChange={(e) => setTotalReceived(e.target.value)}
                 />
+                {error && <p className="text-red-500">{error}</p>}
                 <Separator />
                 <h2>Шаг 2</h2>
                 <div className="flex justify-between flex-row-reverse">
                   <TimePickerComponent value={arrivalTime} onChangeAction={setArrivalTime} />
                   <DatePicker
                       selectedDate={arrivalDate}
-                      onDateChangeAction={setArrivalDate} // исправлено название пропса
+                      onDateChangeAction={setArrivalDate}
                   />
                 </div>
                 <h3>Итого</h3>
@@ -222,7 +270,9 @@ export function OrdersTakenDataTable({ data, columns }: { data: Order[]; columns
                   • Выручка составляет — <b>{clearRevenue} тенге</b>
                 </p>
                 <DialogFooter>
-                  <Button onClick={handleSubmit}>Отправить</Button>
+                  <Button onClick={handleSubmit} disabled={submitting}>
+                    {submitting ? "Отправка..." : "Отправить"}
+                  </Button>
                 </DialogFooter>
               </DialogContent>
             </Dialog>

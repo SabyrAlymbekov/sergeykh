@@ -1,30 +1,57 @@
-"use client";
+'use client'
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@workspace/ui/components/button";
 import { Input } from "@workspace/ui/components/input";
+import {api} from "@shared/utils/api";
+
+
 
 const PercentagesPage = () => {
     // Section 1: Calculation of clean profit distribution
-    const [masterAdvance, setMasterAdvance] = useState(30); // Аванс мастеру (%)
-    const [masterCashDesk, setMasterCashDesk] = useState(70); // Сумма, которую мастер сдает в кассу (%)
+    const [masterAdvance, setMasterAdvance] = useState(0); // advance_percent (%)
+    const [masterCashDesk, setMasterCashDesk] = useState(0); // initial_kassa_percent (%)
 
     // Section 2: Distribution of money by the curator
-    const [immediateCash, setImmediateCash] = useState(30); // Наличные мастеру сразу (%)
-    const [creditedBalance, setCreditedBalance] = useState(30); // Зачисление на баланс мастеру (%)
-    const [curatorPercent, setCuratorPercent] = useState(5); // Процент куратору (%)
-    const [companyDesk, setCompanyDesk] = useState(35); // Процент, остающийся в кассе компании (%)
+    const [immediateCash, setImmediateCash] = useState(0); // cash_percent (%)
+    const [creditedBalance, setCreditedBalance] = useState(0); // balance_percent (%)
+    const [curatorPercent, setCuratorPercent] = useState(0); // curator_percent (%)
+    const [companyDesk, setCompanyDesk] = useState(0); // final_kassa_percent (%)
 
-    const handleSave = () => {
-        // Replace this with your saving logic (e.g. API call)
-        console.log("Новые процентные ставки:", {
-            masterAdvance,
-            masterCashDesk,
-            immediateCash,
-            creditedBalance,
-            curatorPercent,
-            companyDesk,
-        });
+    // Fetch existing settings on mount
+    useEffect(() => {
+        const fetchSettings = async () => {
+            try {
+                const { data } = await api.get("/profit-distribution/");
+                setMasterAdvance(data.advance_percent);
+                setMasterCashDesk(data.initial_kassa_percent);
+                setImmediateCash(data.cash_percent);
+                setCreditedBalance(data.balance_percent);
+                setCuratorPercent(data.curator_percent);
+                setCompanyDesk(data.final_kassa_percent);
+            } catch (error) {
+                console.error("Ошибка при загрузке настроек:", error);
+            }
+        };
+        fetchSettings();
+    }, []);
+
+    // Save settings via PUT
+    const handleSave = async () => {
+        try {
+            const payload = {
+                advance_percent: masterAdvance,
+                initial_kassa_percent: masterCashDesk,
+                cash_percent: immediateCash,
+                balance_percent: creditedBalance,
+                curator_percent: curatorPercent,
+                final_kassa_percent: companyDesk,
+            };
+            await api.put("/profit-distribution/", payload);
+            console.log("Процентные ставки успешно обновлены", payload);
+        } catch (error) {
+            console.error("Ошибка при сохранении настроек:", error);
+        }
     };
 
     return (
@@ -71,8 +98,7 @@ const PercentagesPage = () => {
                     Распределение финансов куратором
                 </h2>
                 <p className="mb-4 text-gray-600">
-                    Мастер передает деньги куратору, который распределяет их следующим
-                    образом:
+                    Мастер передает деньги куратору, который распределяет их следующим образом:
                 </p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>

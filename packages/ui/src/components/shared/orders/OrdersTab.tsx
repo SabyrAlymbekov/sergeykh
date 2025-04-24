@@ -9,8 +9,9 @@ import LastDay from "@shared/orders/lastDay"
 import NonActiveOrders from "@shared/orders/NonActiveOrders"
 import ActiveOrders from "@shared/orders/ActiveOrders"
 import AllOrders from "@shared/orders/AllOrders"
+import Last24hours from "@shared/orders/last24hours";
 
-type OrdersTypeT = 'all' | '4hours' | 'lastday' | 'non-active' | 'active'
+type OrdersTypeT = 'all' | '4hours' | '24hours' | 'non-active' | 'active'
 type UserStatusT = 'curator' | 'master'
 type AccessStatusT = 'pro' | 'max' | 'none'
 
@@ -31,7 +32,7 @@ const OrdersTab: React.FC<OrdersTabProps> = ({ status, accessStatus = 'none' }) 
     }
 
     const getAccessTab = (): OrdersTypeT =>
-        accessStatus === 'pro' ? '4hours' : 'lastday'
+        accessStatus === 'pro' ? '4hours' : '24hours'
 
     const defaultTab = getAccessTab()
 
@@ -50,8 +51,8 @@ const OrdersTab: React.FC<OrdersTabProps> = ({ status, accessStatus = 'none' }) 
                 return <AllOrders />
             case '4hours':
                 return <Last4hours />
-            case 'lastday':
-                return <LastDay />
+            case '24hours':
+                return <Last24hours />
             case 'non-active':
                 return <NonActiveOrders />
             case 'active':
@@ -73,7 +74,7 @@ const OrdersTab: React.FC<OrdersTabProps> = ({ status, accessStatus = 'none' }) 
                         >
                             {tab === '4hours'
                                 ? "4 Hours"
-                                : tab === 'lastday'
+                                : tab === '24hours'
                                     ? "24 Hours"
                                     : capitalize(tab)}
                         </Button>

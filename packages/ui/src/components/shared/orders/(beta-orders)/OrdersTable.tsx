@@ -47,6 +47,7 @@ import {
   DropdownMenuTrigger,
 } from "@workspace/ui/components/dropdown-menu";
 import ActiveOrders from "@shared/orders/ActiveOrders";
+import AllOrders from "@shared/orders/AllOrders";
 
 export function OrdersDataTable({
                                   data,
@@ -182,7 +183,7 @@ export function OrdersDataTable({
                   <DialogContent className="w-full md:max-w-4xl max-h-[90vh] overflow-y-auto">
                     <DialogHeader><DialogTitle>Добавить заказ мастеру</DialogTitle></DialogHeader>
                     <div className="mt-4">
-                      <ActiveOrders isActiveEdit onSelectedChange={setToAssign} masterId={masterId}/>
+                      <AllOrders isActiveEdit onSelectedChange={setToAssign} masterId={masterId}/>
                     </div>
                     <DialogFooter>
                       <DialogClose asChild><Button variant="outline">Отмена</Button></DialogClose>

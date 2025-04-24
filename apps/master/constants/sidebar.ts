@@ -14,12 +14,12 @@ export const sidebar_items = [
     {
         name: "Инструменты",
         list: [
-
-          {
-                title: "Доступные заказы",
-                url: "/orders",
-                icon: ClipboardList,
-            },
+          //
+          // {
+          //       title: "Доступные заказы",
+          //       url: "/orders",
+          //       icon: ClipboardList,
+          //   },
           {
                 title: "Взятые заказы",
                 url: "/orders-taken",
