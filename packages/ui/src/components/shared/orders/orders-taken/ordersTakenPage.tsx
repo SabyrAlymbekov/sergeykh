@@ -31,6 +31,7 @@ export default function OrdersTakenPage() {
                 const { data } = await api.get(`${API}/orders/master/${userId}/`,
                     { headers: { Authorization: `Token ${token}` } }
                 );
+                console.log('Полученные данные:', data);
                 setOrdersData(data);
             } catch (err: any) {
                 console.error('Ошибка загрузки назначенных заказов:', err);

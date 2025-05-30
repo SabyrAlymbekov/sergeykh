@@ -14,7 +14,6 @@ export const sidebar_items = [
     {
         name: "Инструменты",
         list: [
-
           {
                 title: "Не обзвоненные",
                 url: "/not_called",
@@ -28,6 +27,11 @@ export const sidebar_items = [
             {
                 title: "Финансы",
                 url: "/finance",
+                icon: ChartColumn,
+            },
+            {
+                title: "Позвонить",
+                url: "/call",
                 icon: ChartColumn,
             },
         ]
