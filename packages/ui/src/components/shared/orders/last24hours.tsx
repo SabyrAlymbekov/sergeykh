@@ -12,7 +12,7 @@ export default function Last24hours() {
     useEffect(() => {
         let mounted = true;
         api
-            .get<Order[]>("/api/orders/last-24hours/")
+            .get<Order[]>("/api/orders/last-day/")
             .then(res => mounted && setData(res.data))
             .catch(err => mounted && setError(err.message))
             .finally(() => mounted && setLoading(false));
