@@ -3,11 +3,10 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { API } from "@shared/constants/constants";
-import { Master,  } from "@shared/constants/types";
-import { ChartBalanceProfile } from "@/components/users-management/charts/chartBalanceProfile";
+import { Master, } from "@shared/constants/types";
 import { HistoryPayments } from "@shared/finances/chartFinances/historyPayments";
 import { OrdersDataTable } from "@shared/orders/(beta-orders)/OrdersTable";
-import {columns, Order} from "@shared/constants/orders";
+import { columns, Order as OrderType  } from "@shared/constants/orders";
 import { Button } from "@workspace/ui/components/button";
 import { Input } from "@workspace/ui/components/input";
 import { MasterCalendar } from "@workspace/ui/components/master-calendar";
@@ -32,7 +31,7 @@ const MasterProfile: React.FC<MasterProfileProps> = ({ id }) => {
     // ──────────────── state ────────────────
     const [master, setMaster] = useState<Master | null>(null);
     const [balance, setBalance] = useState<number>(0);
-    const [orders, setOrders] = useState<Order[]>([]);
+    const [orders, setOrders] = useState<OrderType[]>([]);
     const [loadingProfile, setLoadingProfile] = useState<boolean>(true);
     const [loadingBalance, setLoadingBalance] = useState<boolean>(true);
     const [loadingOrders, setLoadingOrders] = useState<boolean>(true);
@@ -40,7 +39,6 @@ const MasterProfile: React.FC<MasterProfileProps> = ({ id }) => {
 
     const [topUpAmount, setTopUpAmount] = useState<string>("");
     const [withdrawAmount, setWithdrawAmount] = useState<string>("");
-    const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
 
     const token =
         typeof window !== "undefined" ? localStorage.getItem("token") : "";
@@ -79,7 +77,7 @@ const MasterProfile: React.FC<MasterProfileProps> = ({ id }) => {
     const fetchOrders = async () => {
         setLoadingOrders(true);
         try {
-            const res = await axios.get<Order[]>(
+            const res = await axios.get<OrderType[]>(
                 `${API}/orders/master/${id}/`,
                 { headers: { Authorization: `Token ${token}` } }
             );
@@ -100,65 +98,72 @@ const MasterProfile: React.FC<MasterProfileProps> = ({ id }) => {
 
     // ──────────────── handlers ────────────────
     const topUpOrWithdraw = async (
-        type: "top-up" | "deduct",
+        action: "top-up" | "deduct",
         amount: string,
-        clear: () => void
+        resetAmount: () => void
     ) => {
-        if (!amount) return;
+        const numAmount = parseFloat(amount);
+        if (isNaN(numAmount) || numAmount <= 0) {
+            alert("Введите корректную сумму");
+            return;
+        }
+
         try {
             await axios.post(
-                `${API}/balance/${id}/${type}/`,
-                { amount },
+                `${API}/balance/${id}/${action}/`,
+                { amount: numAmount },
                 { headers: { Authorization: `Token ${token}` } }
             );
-            clear();
-            fetchBalance();
+            fetchBalance(); // Обновить баланс
+            resetAmount();
         } catch (err) {
-            console.error(
-                `Ошибка ${type === "top-up" ? "пополнения" : "списания"}`,
-                err
-            );
+            console.error(`Ошибка при ${action === "top-up" ? "пополнении" : "списании"}`, err);
+            alert(`Не удалось ${action === "top-up" ? "пополнить" : "списать"} баланс`);
         }
     };
 
-    const handleDeleteAccount = async () => {
-        try {
-            await axios.delete(`${API}/users/${id}/`, {
-                headers: { Authorization: `Token ${token}` },
-            });
-            setDeleteDialogOpen(false);
-            setMaster(null);
-        } catch (err) {
-            console.error("Ошибка удаления аккаунта мастера", err);
-        }
-    };
+    // ──────────────── render ────────────────
+    if (loadingProfile) {
+        return <div>Загрузка профиля...</div>;
+    }
 
-    // ──────────────── UI ────────────────
-    if (loadingProfile) return <div>Загрузка профиля...</div>;
-    if (error) return <div className="text-red-500">{error}</div>;
-    if (!master) return <div>Мастер не найден</div>;
+    if (error) {
+        return <div className="text-red-500">{error}</div>;
+    }
+
+    if (!master) {
+        return <div>Мастер не найден</div>;
+    }
 
     return (
-        <div className="flex flex-col mt-5 gap-5">
-            <h1 className="text-xl text-center md:text-2xl mb-5 font-bold">
-                Профиль мастера {master.name}
-            </h1>
+        <div className="container p-4">
+            {/* Заголовок с именем мастера */}
+            <div className="mb-6">
+                <h1 className="text-3xl font-bold">
+                    {master.first_name} {master.last_name}
+                </h1>
+                <p className="text-gray-600">{master.email}</p>
+                <p className="text-sm text-gray-500">ID: {master.id}</p>
+            </div>
 
-            {/* блок: баланс, лог, график */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
-                {/* Баланс и операции */}
-                <div className="flex flex-col items-center gap-5">
-                    <h2 className="text-2xl text-gray-400">Баланс</h2>
-                    {loadingBalance ? (
-                        <span>Загрузка…</span>
-                    ) : (
-                        <span className="text-5xl font-bold">{balance} ₸</span>
-                    )}
-                    <div className="flex gap-5">
-                        {/* Пополнить */}
+            {/* Баланс и операции */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                {/* Баланс */}
+                <div className="rounded-xl border px-5 py-7">
+                    <div className="flex items-center justify-between mb-4">
+                        <h2 className="text-xl font-semibold">Баланс</h2>
+                        {loadingBalance ? (
+                            <div>Загрузка...</div>
+                        ) : (
+                            <span className="text-2xl font-bold">{balance.toFixed(2)} ₽</span>
+                        )}
+                    </div>
+
+                    {/* Кнопки управления балансом */}
+                    <div className="flex gap-2">
                         <Dialog>
                             <DialogTrigger asChild>
-                                <Button variant="outline" className="w-[100px]">
+                                <Button variant="outline" className="flex-1">
                                     Пополнить
                                 </Button>
                             </DialogTrigger>
@@ -186,16 +191,15 @@ const MasterProfile: React.FC<MasterProfileProps> = ({ id }) => {
                             </DialogContent>
                         </Dialog>
 
-                        {/* Снять */}
                         <Dialog>
                             <DialogTrigger asChild>
-                                <Button variant="outline" className="w-[100px]">
-                                    Снять
+                                <Button variant="outline" className="flex-1">
+                                    Списать
                                 </Button>
                             </DialogTrigger>
                             <DialogContent>
                                 <DialogHeader>
-                                    <DialogTitle>Снять средства</DialogTitle>
+                                    <DialogTitle>Списать с баланса</DialogTitle>
                                 </DialogHeader>
                                 <Input
                                     type="number"
@@ -223,9 +227,6 @@ const MasterProfile: React.FC<MasterProfileProps> = ({ id }) => {
                 <div className="rounded-xl border px-5 py-7 h-full">
                     <HistoryPayments userId={id} />
                 </div>
-
-                {/* График баланса */}
-                {/*<ChartBalanceProfile />*/}
             </div>
 
             {/* Календарь мастера */}
@@ -234,7 +235,7 @@ const MasterProfile: React.FC<MasterProfileProps> = ({ id }) => {
                     <h3 className="text-lg font-semibold mb-4">📅 График загруженности мастера</h3>
                     <MasterCalendar 
                         masterId={parseInt(id)} 
-                        userRole="super_admin" 
+                        userRole="operator" 
                         readOnly={true}
                         showCreateButton={false}
                     />
@@ -242,35 +243,13 @@ const MasterProfile: React.FC<MasterProfileProps> = ({ id }) => {
             </div>
 
             {/* Таблица заказов мастера */}
-            <div className="pt-5">{loadingOrders ? (
+            <div className="pt-5">
+                {loadingOrders ? (
                     <div>Загрузка заказов...</div>
                 ) : (
-                    <OrdersDataTable masterId={id} data={orders} columns={columns} status="curator" />
+                    <OrdersDataTable masterId={id} data={orders} columns={columns} status="operator" />
                 )}
             </div>
-
-            {/* Удаление аккаунта */}
-            <div className="flex justify-center mt-10">
-                <Button variant="destructive" onClick={() => setDeleteDialogOpen(true)}>
-                    Удалить аккаунт
-                </Button>
-            </div>
-            <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
-                <DialogContent>
-                    <DialogHeader>
-                        <DialogTitle>Удалить?</DialogTitle>
-                    </DialogHeader>
-                    <p>Это действие необратимо</p>
-                    <DialogFooter className="flex justify-end gap-2">
-                        <DialogClose asChild>
-                            <Button variant="outline">Отмена</Button>
-                        </DialogClose>
-                        <Button variant="destructive" onClick={handleDeleteAccount}>
-                            Удалить
-                        </Button>
-                    </DialogFooter>
-                </DialogContent>
-            </Dialog>
         </div>
     );
 };

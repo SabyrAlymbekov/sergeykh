@@ -9,6 +9,8 @@ import { OrdersDataTable } from "@shared/orders/(beta-orders)/OrdersTable";
 import { columns, Order as OrderType  } from "@shared/constants/orders";
 import { Button } from "@workspace/ui/components/button";
 import { Input } from "@workspace/ui/components/input";
+import { MasterCalendar } from "@workspace/ui/components/master-calendar";
+import TokenSetter from "@/components/token-setter";
 import {
     Dialog,
     DialogTrigger,
@@ -227,9 +229,21 @@ const MasterProfile: React.FC<MasterProfileProps> = ({ id }) => {
                 {/*<ChartBalanceProfile />*/}
             </div>
 
-            {/* Таблица заказов мастера */}
+            {/* Календарь мастера */}
             <div className="pt-5">
-                {loadingOrders ? (
+                <div className="rounded-xl border p-6">
+                    <h3 className="text-lg font-semibold mb-4">📅 График загруженности мастера</h3>
+                    <MasterCalendar 
+                        masterId={parseInt(id)} 
+                        userRole="curator" 
+                        readOnly={true}
+                        showCreateButton={false}
+                    />
+                </div>
+            </div>
+
+            {/* Таблица заказов мастера */}
+            <div className="pt-5">{loadingOrders ? (
                     <div>Загрузка заказов...</div>
                 ) : (
                     <OrdersDataTable masterId={id} data={orders} columns={columns} status="curator" />

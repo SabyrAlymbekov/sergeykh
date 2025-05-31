@@ -9,7 +9,7 @@ const CalendarPage = () => {
         <div className="flex items-center justify-center gap-4">
           <h1 className="text-2xl font-bold">Calendar</h1>
         </div>
-        <Calendar/>
+        <Calendar userRole="master"/>
 
         {/*<div className="grid grid-cols-4 grid-rows-1 gap-5">*/}
 

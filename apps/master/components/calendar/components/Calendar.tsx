@@ -41,7 +41,7 @@ export default function Calendar({ userRole = 'user' }: CalendarProps) {
 
   // Мемоизируем API instance для предотвращения лишних ререндеров
   const api = useMemo(() => {
-    const API_DOMAIN = process.env.NEXT_PUBLIC_API_URL || "";
+    const API_DOMAIN = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
     console.log("API_DOMAIN:", API_DOMAIN);
     return axios.create({
       baseURL: API_DOMAIN,
