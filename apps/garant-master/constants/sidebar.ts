@@ -37,6 +37,16 @@ export const sidebar_items = [
             },
         ]
     },
+    {
+      name: "Абоненты",
+      list: [
+        {
+          title: "Абоненты",
+          url: "/abonents",
+          icon: UserRound,
+        },
+      ],
+    },
     // {
     //     name: "Информация",
     //     list: [

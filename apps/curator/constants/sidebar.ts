@@ -3,7 +3,10 @@ import {
     ClipboardList,
     UserPlus,
     ChartColumn,
-    Headset, BookPlus, Anvil
+    Headset,
+    BookPlus,
+    Anvil,
+    User  // added User icon for Абоненты tab
 } from 'lucide-react';
 
 export const sidebar_items = [
@@ -56,6 +59,16 @@ export const sidebar_items = [
                 icon: UserPlus,
             }
         ]
+    },
+    {
+      name: "Абоненты",
+      list: [
+        {
+          title: "Абоненты",
+          url: "/abonents",
+          icon: User,
+        },
+      ],
     }
     // {
     //     name: "Информация",

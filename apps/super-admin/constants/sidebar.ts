@@ -4,7 +4,7 @@ import {
     UserPlus,
     ChartColumn,
     Headset, BookPlus, Anvil,
-    UserSearch, Percent, Podcast, FileClock, Wallet
+    UserSearch, Percent, Podcast, FileClock, Wallet, User
 } from 'lucide-react';
 
 export const sidebar_items = [
@@ -72,6 +72,16 @@ export const sidebar_items = [
                 icon: UserPlus,
             }
         ]
+    },
+    {
+      name: "Абоненты",
+      list: [
+        {
+          title: "Абоненты",
+          url: "/abonents",
+          icon: User,
+        },
+      ],
     }
     // {
     //     name: "Информация",

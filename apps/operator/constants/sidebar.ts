@@ -1,4 +1,4 @@
-import { Home, Headset, ChartColumn,BookPlus,  UserRound, CalendarCheck, Settings, ChartNoAxesCombined } from 'lucide-react';
+import { Home, Headset, ChartColumn, BookPlus, UserRound, CalendarCheck, Settings, ChartNoAxesCombined, User } from 'lucide-react';
 
 export const sidebar_items = [
     {
@@ -35,6 +35,16 @@ export const sidebar_items = [
                 icon: ChartColumn,
             },
         ]
+    },
+    {
+      name: "Абоненты",
+      list: [
+        {
+          title: "Абоненты",
+          url: "/abonents",
+          icon: User,
+        },
+      ],
     },
     // {
     //     name: "Информация",
