@@ -64,27 +64,41 @@ export function MasterCalendar({
         setLoading(true);
         const token = localStorage.getItem('token');
         
+        if (!token) {
+          setError('Отсутствует токен авторизации');
+          return;
+        }
+        
         // Если передан masterId, получаем события конкретного мастера, иначе свои события
         const endpoint = masterId ? `/master/${masterId}/events/` : '/mine/';
         
+        console.log("Запрос к:", `${apiBaseUrl}${endpoint}`);
+        console.log("Токен:", token);
+        
         const response = await api.get(endpoint, {
-          headers: token ? { Authorization: `Token ${token}` } : {},
+          headers: { Authorization: `Token ${token}` },
         });
         
-        console.log(response.data)
+        console.log("Ответ сервера:", response.data);
         if (response.status === 200) {
           setEvents(response.data);
         }
       } catch (error: any) {
         console.error('Ошибка при загрузке событий:', error);
-        setError('Не удалось загрузить события календаря');
+        if (error.response?.status === 403) {
+          setError('Нет доступа к календарю мастера. Проверьте права доступа.');
+        } else if (error.response?.status === 401) {
+          setError('Ошибка авторизации. Необходимо войти в систему.');
+        } else {
+          setError('Не удалось загрузить события календаря');
+        }
       } finally {
         setLoading(false);
       }
     };
 
     fetchEvents();
-  }, [api, masterId]);
+  }, [api, masterId, apiBaseUrl]);
 
   // Обработчик клика по дате - только для редактируемого календаря
   const handleDateClick = useCallback((arg: { date: Date }) => {

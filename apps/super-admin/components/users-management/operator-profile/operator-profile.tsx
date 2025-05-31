@@ -72,6 +72,14 @@ const OperatorProfile: React.FC<OperatorProfileProps> = ({ id }) => {
 
     const handleTopUp = async () => {
         if (!topUpAmount) return;
+        
+        const amount = parseFloat(topUpAmount);
+        
+        if (isNaN(amount) || amount <= 0) {
+            alert("Введите корректную сумму");
+            return;
+        }
+        
         try {
             await axios.post(
                 `${API}/balance/${id}/top-up/`,
@@ -87,6 +95,19 @@ const OperatorProfile: React.FC<OperatorProfileProps> = ({ id }) => {
 
     const handleWithdraw = async () => {
         if (!withdrawAmount) return;
+        
+        const amount = parseFloat(withdrawAmount);
+        
+        if (isNaN(amount) || amount <= 0) {
+            alert("Введите корректную сумму");
+            return;
+        }
+        
+        if (amount > balance) {
+            alert("Нельзя списать больше, чем есть на балансе");
+            return;
+        }
+        
         try {
             await axios.post(
                 `${API}/balance/${id}/deduct/`,

@@ -105,6 +105,19 @@ const MasterProfile: React.FC<MasterProfileProps> = ({ id }) => {
         clear: () => void
     ) => {
         if (!amount) return;
+        
+        const numAmount = parseFloat(amount);
+        
+        if (isNaN(numAmount) || numAmount <= 0) {
+            alert("Введите корректную сумму");
+            return;
+        }
+        
+        if (type === "deduct" && numAmount > balance) {
+            alert("Нельзя списать больше, чем есть на балансе");
+            return;
+        }
+        
         try {
             await axios.post(
                 `${API}/balance/${id}/${type}/`,
@@ -234,9 +247,10 @@ const MasterProfile: React.FC<MasterProfileProps> = ({ id }) => {
                     <h3 className="text-lg font-semibold mb-4">📅 График загруженности мастера</h3>
                     <MasterCalendar 
                         masterId={parseInt(id)} 
-                        userRole="super_admin" 
+                        userRole="admin" 
                         readOnly={true}
                         showCreateButton={false}
+                        apiBaseUrl={API}
                     />
                 </div>
             </div>

@@ -87,6 +87,13 @@ const CuratorProfile: React.FC<CuratorProfileProps> = ({ id }) => {
 
   // CRUD‑функции
   const handleTopUp = () => {
+    const amount = parseFloat(topUpAmount);
+    
+    if (isNaN(amount) || amount <= 0) {
+      alert("Введите корректную сумму");
+      return;
+    }
+    
     const t = localStorage.getItem("token") || "";
     axios
       .post(
@@ -102,6 +109,18 @@ const CuratorProfile: React.FC<CuratorProfileProps> = ({ id }) => {
   };
 
   const handleWithdraw = () => {
+    const amount = parseFloat(withdrawAmount);
+    
+    if (isNaN(amount) || amount <= 0) {
+      alert("Введите корректную сумму");
+      return;
+    }
+    
+    if (amount > balance) {
+      alert("Нельзя списать больше, чем есть на балансе");
+      return;
+    }
+    
     const t = localStorage.getItem("token") || "";
     axios
       .post(

@@ -34,6 +34,11 @@ export const sidebar_items = [
                 url: "/call",
                 icon: ChartColumn,
             },
+            {
+                title: "График загруженности",
+                url: "/call",
+                icon: ChartColumn,
+            },
         ]
     },
     {
