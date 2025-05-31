@@ -4,6 +4,7 @@ import AppSidebar from '@/components/sidebar/sidebar'
 import { Separator } from '@workspace/ui/components/separator'
 import HeaderBreadcrumb from '@/components/header/header-breadcrumb'
 import ThemeSwitcher from '@/components/theme-switcher'
+import Link from 'next/link';
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -19,6 +20,9 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
             />
             <HeaderBreadcrumb></HeaderBreadcrumb>
             <div className="ml-auto flex items-center gap-2">
+              <Link href="/abonents" className="px-3 py-1 text-sm font-medium hover:bg-gray-200 rounded">
+                Абоненты
+              </Link>
               <ThemeSwitcher></ThemeSwitcher>
             </div>
           </div>

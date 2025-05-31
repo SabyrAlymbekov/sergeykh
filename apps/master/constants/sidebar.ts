@@ -35,7 +35,22 @@ export const sidebar_items = [
                 url: "/finance",
                 icon: ChartColumn,
             },
+            {
+                title: "Абоненты",
+                url: "/abonents",
+                icon: UserRound,
+            },
         ]
+    },
+    {
+      name: "Абоненты",
+      list: [
+        {
+          title: "Абоненты",
+          url: "/abonents",
+          icon: UserRound,
+        },
+      ],
     },
     // {
     //     name: "Информация",
