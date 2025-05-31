@@ -22,10 +22,26 @@ import {
   DialogClose,
 } from "@workspace/ui/components/dialog";
 import { Input } from "@workspace/ui/components/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@workspace/ui/components/select";
 import {ActionsMenu} from "@shared/constants/actionMenu";
 
 interface Props {
   id: string;
+}
+
+interface Master {
+  id: number;
+  email: string;
+  role: string;
+  first_name: string;
+  last_name: string;
+  full_name: string;
 }
 
 export default function OrderDetailsClient({ id }: Props) {
@@ -37,9 +53,59 @@ export default function OrderDetailsClient({ id }: Props) {
 
   const [isAssignOpen, setIsAssignOpen] = useState(false);
   const [newMasterId, setNewMasterId] = useState("");
+  const [masters, setMasters] = useState<Master[]>([]);
+  const [mastersLoading, setMastersLoading] = useState(false);
 
   const [isTransferOpen, setIsTransferOpen] = useState(false);
   const [warrantyMasterId, setWarrantyMasterId] = useState("");
+  const [warrantyMasters, setWarrantyMasters] = useState<Master[]>([]);
+  const [warrantyMastersLoading, setWarrantyMastersLoading] = useState(false);
+
+  const fetchMasters = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+
+    setMastersLoading(true);
+    try {
+      const res = await fetch(`${API}/users/masters/`, {
+        headers: { 
+          "Content-Type": "application/json", 
+          Authorization: `Token ${token}` 
+        },
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setMasters(data);
+      }
+    } catch (error) {
+      console.error("Ошибка при загрузке мастеров:", error);
+    } finally {
+      setMastersLoading(false);
+    }
+  };
+
+  const fetchWarrantyMasters = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+
+    setWarrantyMastersLoading(true);
+    try {
+      const res = await fetch(`${API}/users/warranty-masters/`, {
+        headers: { 
+          "Content-Type": "application/json", 
+          Authorization: `Token ${token}` 
+        },
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setWarrantyMasters(data);
+      }
+    } catch (error) {
+      console.error("Ошибка при загрузке гарантийных мастеров:", error);
+    } finally {
+      setWarrantyMastersLoading(false);
+    }
+  };
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -73,7 +139,7 @@ export default function OrderDetailsClient({ id }: Props) {
   }, [id]);
 
   const handleAssignSubmit = async () => {
-    if (!order) return;
+    if (!order || !newMasterId) return;
     const token = localStorage.getItem("token");
     const masterIdNum = parseInt(newMasterId, 10);
     if (isNaN(masterIdNum)) {
@@ -122,13 +188,19 @@ export default function OrderDetailsClient({ id }: Props) {
   };
 
   const handleTransferSubmit = async () => {
-    if (!order) return;
+    if (!order || !warrantyMasterId) return;
     const token = localStorage.getItem("token");
+    const warrantyMasterIdNum = parseInt(warrantyMasterId, 10);
+    if (isNaN(warrantyMasterIdNum)) {
+      console.warn("Некорректный ID гарантийного мастера");
+      return;
+    }
+
     try {
       await fetch(`${API}/orders/${order.id}/transfer/`, {
         method: "POST",
         headers: { "Content-Type": "application/json", Authorization: `Token ${token}` },
-        body: JSON.stringify({ warranty_master_id: parseInt(warrantyMasterId, 10) }),
+        body: JSON.stringify({ warranty_master_id: warrantyMasterIdNum }),
       });
       setOrder({ ...order, status: 'назначен' } as Order);
       setIsTransferOpen(false);
@@ -191,7 +263,12 @@ export default function OrderDetailsClient({ id }: Props) {
 
       {(userRole === 'admin' || userRole === 'curator') && (
         <div className="mt-6 flex flex-wrap gap-2">
-          <Dialog open={isAssignOpen} onOpenChange={setIsAssignOpen}>
+          <Dialog open={isAssignOpen} onOpenChange={(open) => {
+            setIsAssignOpen(open);
+            if (open && masters.length === 0) {
+              fetchMasters();
+            }
+          }}>
             <DialogTrigger asChild>
               <Button>Назначить мастера</Button>
             </DialogTrigger>
@@ -199,17 +276,28 @@ export default function OrderDetailsClient({ id }: Props) {
               <DialogHeader>
                 <DialogTitle>Назначить мастера</DialogTitle>
               </DialogHeader>
-              <Input
-                placeholder="Введите ID мастера"
-                value={newMasterId}
-                onChange={(e) => setNewMasterId(e.target.value)}
-                className="mb-4"
-              />
+              <Select value={newMasterId} onValueChange={setNewMasterId}>
+                <SelectTrigger className="mb-4">
+                  <SelectValue placeholder={mastersLoading ? "Загрузка..." : "Выберите мастера"} />
+                </SelectTrigger>
+                <SelectContent>
+                  {masters.map((master) => (
+                    <SelectItem key={master.id} value={master.id.toString()}>
+                      {master.full_name} ({master.email}) - ID: {master.id}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
               <DialogFooter>
                 <DialogClose asChild>
                   <Button variant="outline">Отмена</Button>
                 </DialogClose>
-                <Button onClick={handleAssignSubmit}>Подтвердить</Button>
+                <Button 
+                  onClick={handleAssignSubmit}
+                  disabled={!newMasterId || mastersLoading}
+                >
+                  Подтвердить
+                </Button>
               </DialogFooter>
             </DialogContent>
           </Dialog>
@@ -221,7 +309,12 @@ export default function OrderDetailsClient({ id }: Props) {
             Убрать мастера
           </Button>
 
-          <Dialog open={isTransferOpen} onOpenChange={setIsTransferOpen}>
+          <Dialog open={isTransferOpen} onOpenChange={(open) => {
+            setIsTransferOpen(open);
+            if (open && warrantyMasters.length === 0) {
+              fetchWarrantyMasters();
+            }
+          }}>
             <DialogTrigger asChild>
               <Button variant="destructive">Передать гарантийному мастеру</Button>
             </DialogTrigger>
@@ -229,17 +322,27 @@ export default function OrderDetailsClient({ id }: Props) {
               <DialogHeader>
                 <DialogTitle>Передать гарантийному мастеру</DialogTitle>
               </DialogHeader>
-              <Input
-                placeholder="Введите ID гарантийного мастера"
-                value={warrantyMasterId}
-                onChange={(e) => setWarrantyMasterId(e.target.value)}
-                className="mb-4"
-              />
+              <Select value={warrantyMasterId} onValueChange={setWarrantyMasterId}>
+                <SelectTrigger className="mb-4">
+                  <SelectValue placeholder={warrantyMastersLoading ? "Загрузка..." : "Выберите гарантийного мастера"} />
+                </SelectTrigger>
+                <SelectContent>
+                  {warrantyMasters.map((master) => (
+                    <SelectItem key={master.id} value={master.id.toString()}>
+                      {master.full_name} ({master.email}) - ID: {master.id}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
               <DialogFooter>
                 <DialogClose asChild>
                   <Button variant="outline">Отмена</Button>
                 </DialogClose>
-                <Button variant="destructive" onClick={handleTransferSubmit}>
+                <Button 
+                  variant="destructive" 
+                  onClick={handleTransferSubmit}
+                  disabled={!warrantyMasterId || warrantyMastersLoading}
+                >
                   Передать
                 </Button>
               </DialogFooter>

@@ -36,10 +36,17 @@ export const sidebar_items = [
                 icon: ChartColumn,
             },
             {
+<<<<<<< HEAD
                 title: "Абоненты",
                 url: "/abonents",
                 icon: UserRound,
             },
+=======
+                title: "Позвонить",
+                url: "/call",
+                icon: ChartColumn,
+            }
+>>>>>>> ecf43e2 (hbufadin)
         ]
     },
     {
