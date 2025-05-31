@@ -83,26 +83,26 @@ export function LoginForm({
       localStorage.setItem("user_id", String(userId));
       console.log("ID пользователя сохранён:", userId);
 
-      // 1) Получаем VPBX-токен
-      const res = await axios.post(GET_URL, {
-        login:    email,    // обязательно поле login
-        password: password,
-      });
-      const { accessToken, refreshToken, expiresIn } = res.data;
-      const expiresAt = Date.now() + expiresIn * 1000;
+      // // 1) Получаем VPBX-токен
+      // const res = await axios.post(GET_URL, {
+      //   login:    email,    // обязательно поле login
+      //   password: password,
+      // });
+      // const { accessToken, refreshToken, expiresIn } = res.data;
+      // const expiresAt = Date.now() + expiresIn * 1000;
 
-      // 2) Сохраняем в localStorage
-      localStorage.setItem("vpbx_access",  accessToken);
-      localStorage.setItem("vpbx_refresh", refreshToken);
-      localStorage.setItem("vpbx_expires", expiresAt.toString());
+      // // 2) Сохраняем в localStorage
+      // localStorage.setItem("vpbx_access",  accessToken);
+      // localStorage.setItem("vpbx_refresh", refreshToken);
+      // localStorage.setItem("vpbx_expires", expiresAt.toString());
 
-      // 3) Опционально: сразу проверяем защищённый endpoint
-      const vpbx = createVPBXClient();
-      // например:
-      // const calls = await vpbx.get("/Abonents/List");
-      // console.log("Ваши абоненты:", calls.data);
+      // // 3) Опционально: сразу проверяем защищённый endpoint
+      // const vpbx = createVPBXClient();
+      // // например:
+      // // const calls = await vpbx.get("/Abonents/List");
+      // // console.log("Ваши абоненты:", calls.data);
 
-      // 4) Переходим в профиль
+      // // 4) Переходим в профиль
       router.push("/profile");
     } catch (err: any) {
       console.error(err);
